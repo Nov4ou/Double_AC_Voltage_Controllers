@@ -25,6 +25,9 @@ extern Uint16 RamfuncsLoadSize;
 // // #pragma CODE_SECTION(OLED_Update, "ramfuncs");
 
 #define ISR_FREQUENCY 20000
+#define Kp 50.7089
+// #define Ki 1063.14
+#define Ki 5000.0
 #define GRID_FREQ 50
 #define CURRENT_RMS 1.5
 
@@ -107,6 +110,8 @@ int main() {
   SPLL_1ph_SOGI_F_init(GRID_FREQ, ((float)(1.0 / ISR_FREQUENCY)), &spll1);
   SPLL_1ph_SOGI_F_coeff_update(((float)(1.0 / ISR_FREQUENCY)),
                                (float)(2 * PI * GRID_FREQ), &spll1);
+  spll1.lpf_coeff.B0_lf = (float32)((2 * Kp + Ki / ISR_FREQUENCY) / 2);
+  spll1.lpf_coeff.B1_lf = (float32)(-(2 * Kp - Ki / ISR_FREQUENCY) / 2);
   PID_Init(&VoltageLoop, 0.06, 0.02, 0, 50, 50);
   PID_Init(&CurrentLoop, 1, 0.001, 0, 50, 50);
 
@@ -245,7 +250,7 @@ __interrupt void cpu_timer1_isr(void) {
                                (float)(2 * PI * GRID_FREQ), &spll1);
 
   V_mod = sin(spll1.theta[0]);
-  EPwm2Regs.CMPA.half.CMPA = (Uint16) (fabs(V_mod) * MAX_CMPA);
+  EPwm2Regs.CMPA.half.CMPA = (Uint16)(fabs(V_mod) * MAX_CMPA);
 }
 
 __interrupt void cpu_timer2_isr(void) {
@@ -255,26 +260,26 @@ __interrupt void cpu_timer2_isr(void) {
   // EPwm6Regs.CMPA.half.CMPA = compare;
 
   // if (flag_voltage != prev_flag_voltage) {
-    if (flag_voltage == 1) {
-      /********************* Voltage Loop ************************/
-      PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
-      output = VoltageLoop.output;
-      PID_Calc(&CurrentLoop, output * fabs(V_mod), grid_inverter_current);
-      curr_loop_out = CurrentLoop.output / 40;
-      compare = (Uint32)(curr_loop_out * MAX_CMPA);
-      EPwm5Regs.CMPA.half.CMPA = compare;
-      EPwm6Regs.CMPA.half.CMPA = compare;
+  if (flag_voltage == 1) {
+    /********************* Voltage Loop ************************/
+    PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
+    output = VoltageLoop.output;
+    PID_Calc(&CurrentLoop, output * fabs(V_mod), grid_inverter_current);
+    curr_loop_out = CurrentLoop.output / 40;
+    compare = (Uint32)(curr_loop_out * MAX_CMPA);
+    EPwm5Regs.CMPA.half.CMPA = compare;
+    EPwm6Regs.CMPA.half.CMPA = compare;
 
-      /********************* Current Loop ************************/
-      // ref_current = fabs(V_mod) * output * ratio;
-      // curr_error = ref_current - fabs(grid_inverter_current);
-      // // curr_loop_out = Kp_set * curr_error / 10;
-      // curr_loop_out = Kp_set * curr_error / 40;
-      // compare = (Uint32)(curr_loop_out * MAX_CMPA);
-      // EPwm5Regs.CMPA.half.CMPA = compare;
-      // EPwm6Regs.CMPA.half.CMPA = compare;
-      /********************* Current Loop ************************/
-    }
+    /********************* Current Loop ************************/
+    // ref_current = fabs(V_mod) * output * ratio;
+    // curr_error = ref_current - fabs(grid_inverter_current);
+    // // curr_loop_out = Kp_set * curr_error / 10;
+    // curr_loop_out = Kp_set * curr_error / 40;
+    // compare = (Uint32)(curr_loop_out * MAX_CMPA);
+    // EPwm5Regs.CMPA.half.CMPA = compare;
+    // EPwm6Regs.CMPA.half.CMPA = compare;
+    /********************* Current Loop ************************/
+  }
   //   prev_flag_voltage = flag_voltage;
   // }
 }
