@@ -34,7 +34,7 @@ _Bool flag_voltage = 0;
 
 extern float grid_voltage;
 float V_rms = 0;
-float V_rms_ref = 25;
+float V_rms_ref = 5;
 float output = 0;
 float dutycycle = 1000;
 float normalized_voltage;
@@ -239,7 +239,7 @@ __interrupt void cpu_timer2_isr(void) {
   GpioDataRegs.GPATOGGLE.bit.GPIO0 = 1;
   if (flag_voltage == 1) {
     PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
-    output = 5 + VoltageLoop.output;
+    output = 20 + VoltageLoop.output;
     dutycycle = output / 40;
     compare = (Uint32)(dutycycle * MAX_CMPA);
     if (compare >= 2230)
