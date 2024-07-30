@@ -59,7 +59,7 @@ typedef struct {
   float integral, maxIntegral;
   float output, maxOutput;
 } PID;
-PID VoltageLoop;
+PID VoltageLoop, CurrentLoop;
 
 SINEANALYZER_DIFF_F sineanalyzer_diff1;
 SPLL_1ph_SOGI_F spll1;
@@ -108,7 +108,7 @@ int main() {
   SPLL_1ph_SOGI_F_coeff_update(((float)(1.0 / ISR_FREQUENCY)),
                                (float)(2 * PI * GRID_FREQ), &spll1);
   PID_Init(&VoltageLoop, 0.06, 0.02, 0, 50, 50);
-  // PID_Init(&VoltageLoop, 0.06, 1.2, 0, 50, 50);
+  PID_Init(&CurrentLoop, 1, 0.001, 0, 50, 50);
 
   LED_Init();
   EPWM2_Init(MAX_CMPA);
@@ -259,24 +259,20 @@ __interrupt void cpu_timer2_isr(void) {
       /********************* Voltage Loop ************************/
       PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
       output = VoltageLoop.output;
-      // dutycycle = output / 40;
-      // compare = (Uint32)(dutycycle * MAX_CMPA);
-      // // if (compare >= 2200)
-      // //   compare = 2200;
-      // // if (compare <= 50)
-      // //   compare = 50;
-      // EPwm5Regs.CMPA.half.CMPA = compare;
-      // EPwm6Regs.CMPA.half.CMPA = compare;
-      /********************* Voltage Loop ************************/
-
-      /********************* Current Loop ************************/
-      ref_current = fabs(V_mod) * output * ratio;
-      curr_error = ref_current - fabs(grid_inverter_current);
-      // curr_loop_out = Kp_set * curr_error / 10;
-      curr_loop_out = Kp_set * curr_error / 40;
+      PID_Calc(&CurrentLoop, output * fabs(V_mod), grid_inverter_current);
+      curr_loop_out = CurrentLoop.output / 40;
       compare = (Uint32)(curr_loop_out * MAX_CMPA);
       EPwm5Regs.CMPA.half.CMPA = compare;
       EPwm6Regs.CMPA.half.CMPA = compare;
+
+      /********************* Current Loop ************************/
+      // ref_current = fabs(V_mod) * output * ratio;
+      // curr_error = ref_current - fabs(grid_inverter_current);
+      // // curr_loop_out = Kp_set * curr_error / 10;
+      // curr_loop_out = Kp_set * curr_error / 40;
+      // compare = (Uint32)(curr_loop_out * MAX_CMPA);
+      // EPwm5Regs.CMPA.half.CMPA = compare;
+      // EPwm6Regs.CMPA.half.CMPA = compare;
       /********************* Current Loop ************************/
     }
   //   prev_flag_voltage = flag_voltage;
