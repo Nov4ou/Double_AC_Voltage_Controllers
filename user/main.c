@@ -36,7 +36,7 @@ _Bool prev_flag_voltage = 0;
 extern float grid_voltage;
 extern float grid_inverter_current;
 float V_rms = 0;
-float V_rms_ref = 25;
+float V_rms_ref = 5;
 float output = 0;
 float dutycycle = 1000;
 float normalized_voltage;
@@ -141,6 +141,9 @@ int main() {
   while (1) {
     // GpioDataRegs.GPATOGGLE.bit.GPIO0 = 1;
     OLED_Update();
+    // Test
+    EPwm5Regs.CMPA.half.CMPA = compare;
+    EPwm6Regs.CMPA.half.CMPA = compare;
 
     if (KEY_Read() != 0) {
       if (KEY_Read() == 1) {
