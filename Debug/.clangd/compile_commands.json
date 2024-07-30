@@ -1,0 +1,102 @@
+[
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/adc/adc.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/epwm/epwm.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/key/key.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/oled/oled.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/spi/spi.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/timer/timer.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/f2806x_libraries/F2806x_Adc.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/f2806x_libraries/F2806x_CodeStartBranch.asm"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/f2806x_libraries/F2806x_CpuTimers.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/f2806x_libraries/F2806x_DefaultIsr.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/f2806x_libraries/F2806x_EPwm.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/f2806x_libraries/F2806x_GlobalVariableDefs.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/f2806x_libraries/F2806x_Gpio.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/f2806x_libraries/F2806x_I2C.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/f2806x_libraries/F2806x_PieCtrl.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/f2806x_libraries/F2806x_PieVect.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/f2806x_libraries/F2806x_Spi.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/f2806x_libraries/F2806x_SysCtrl.c"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/f2806x_libraries/F2806x_usDelay.asm"
+   },
+   {
+      "directory" : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/Debug",
+      "command"   : "clang++ -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers\" -I\"/Users/nov4ou/workspace_v12/f2806x/headers/include\" -I\"/Users/nov4ou/workspace_v12/f2806x/common/include\" -I\"/Applications/ti/ti-cgt-c2000_22.6.1.LTS/include\" -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/adc\" -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/epwm\" -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/key\" -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/oled\" -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/spi\" -I\"/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/timer\" -I\"/Applications/ti/solar/v1.2/float/include\"",
+      "file"      : "/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/user/main.c"
+   }
+]
