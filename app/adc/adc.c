@@ -159,7 +159,7 @@ __interrupt void adc_isr(void) {
   // if (rectifier_volt_index >= GRID_V_INDEX)
   //   rectifier_volt_index = 0;
 
-  grid_voltage = Voltage2[ConversionCount] * 0.0272 - 50.498;
+  grid_voltage = Voltage2[ConversionCount] * 0.0433 - 80.532;
   voltage_graph[vol_index] = grid_voltage;
   vol_index = (vol_index + 1) % VOL_GRAPH_INDEX;
   // grid_vol_graph[gridvindex++] = grid_voltage;
