@@ -31,6 +31,7 @@ extern Uint16 RamfuncsLoadSize;
 _Bool flag = 0;
 _Bool prev_flag = 0;
 _Bool flag_voltage = 0;
+_Bool prev_flag_voltage = 0;
 
 extern float grid_voltage;
 float V_rms = 0;
@@ -236,25 +237,31 @@ __interrupt void cpu_timer2_isr(void) {
   // EPwm5Regs.CMPA.half.CMPA = compare;
   // EPwm6Regs.CMPA.half.CMPA = compare;
 
-  if (flag_voltage == 1) {
-    /********************* Voltage Loop ************************/
-    PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
-    output = 5 + VoltageLoop.output;
-    dutycycle = output / 40;
-    compare = (Uint32)(dutycycle * MAX_CMPA);
-    // if (compare >= 2200)
-    //   compare = 2200;
-    // if (compare <= 50)
-    //   compare = 50;
-    EPwm5Regs.CMPA.half.CMPA = compare;
-    EPwm6Regs.CMPA.half.CMPA = compare;
-    /********************* Voltage Loop ************************/
+  if (flag_voltage != prev_flag_voltage) {
+    if (flag_voltage == 1) {
+      /********************* Voltage Loop ************************/
+      PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
+      output = 5 + VoltageLoop.output;
+      // dutycycle = output / 40;
+      // compare = (Uint32)(dutycycle * MAX_CMPA);
+      // // if (compare >= 2200)
+      // //   compare = 2200;
+      // // if (compare <= 50)
+      // //   compare = 50;
+      // EPwm5Regs.CMPA.half.CMPA = compare;
+      // EPwm6Regs.CMPA.half.CMPA = compare;
+      /********************* Voltage Loop ************************/
 
-    /********************* Current Loop ************************/
-    ref_current = sin(spll1.theta[0]) * CURRENT_RMS * 1.414;
-    curr_error = ref_current - grid_inverter_current;
-    curr_loop_out = Kp_set * curr_error + grid_inverter_c
-    /********************* Current Loop ************************/
+      /********************* Current Loop ************************/
+      ref_current = abs(sin(spll1.theta[0])) * output;
+      curr_error = ref_current - abs(grid_inverter_current);
+      curr_loop_out = 15 * curr_error / 40;
+      compare = (Uint32)(curr_loop_out * MAX_CMPA);
+      EPwm5Regs.CMPA.half.CMPA = compare;
+      EPwm6Regs.CMPA.half.CMPA = compare;
+      /********************* Current Loop ************************/
+    }
+    prev_flag_voltage = flag_voltage;
   }
 }
 
