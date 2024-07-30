@@ -34,7 +34,7 @@ app/oled/oled.obj: /Users/nov4ou/workspace_v12/f2806x/common/include/F2806x_Dma_
 app/oled/oled.obj: /Users/nov4ou/workspace_v12/f2806x/common/include/F2806x_Cla_defines.h
 app/oled/oled.obj: /Users/nov4ou/workspace_v12/f2806x/common/include/F2806x_DefaultISR.h
 app/oled/oled.obj: ../app/oled/oledfont.h
-app/oled/oled.obj: /Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/spi/spi.h
+app/oled/oled.obj: /Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/app/spi/spi.h
 
 ../app/oled/oled.c:
 
@@ -104,5 +104,5 @@ app/oled/oled.obj: /Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app
 
 ../app/oled/oledfont.h:
 
-/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/spi/spi.h:
+/Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/app/spi/spi.h:
 
