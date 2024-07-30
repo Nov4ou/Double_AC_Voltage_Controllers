@@ -66,11 +66,11 @@ user/main.obj: /Applications/ti/solar/v1.2/float/include/SINEANALYZER_DIFF_wPWR_
 user/main.obj: /Applications/ti/solar/v1.2/float/include/SPLL_1ph_F.h
 user/main.obj: /Applications/ti/solar/v1.2/float/include/SPLL_3PH_DDSRF_F.h
 user/main.obj: /Applications/ti/solar/v1.2/float/include/SPLL_3PH_SRF_F.h
-user/main.obj: /Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/app/adc/adc.h
-user/main.obj: /Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/app/epwm/epwm.h
-user/main.obj: /Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/app/key/key.h
-user/main.obj: /Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/app/oled/oled.h
-user/main.obj: /Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/app/spi/spi.h
+user/main.obj: /Users/nov4ou/workspace_v12/Problems/Double_AC_Voltage_Controllers/app/adc/adc.h
+user/main.obj: /Users/nov4ou/workspace_v12/Problems/Double_AC_Voltage_Controllers/app/epwm/epwm.h
+user/main.obj: /Users/nov4ou/workspace_v12/Problems/Double_AC_Voltage_Controllers/app/key/key.h
+user/main.obj: /Users/nov4ou/workspace_v12/Problems/Double_AC_Voltage_Controllers/app/oled/oled.h
+user/main.obj: /Users/nov4ou/workspace_v12/Problems/Double_AC_Voltage_Controllers/app/spi/spi.h
 
 ../user/main.c:
 
@@ -204,13 +204,13 @@ user/main.obj: /Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/ap
 
 /Applications/ti/solar/v1.2/float/include/SPLL_3PH_SRF_F.h:
 
-/Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/app/adc/adc.h:
+/Users/nov4ou/workspace_v12/Problems/Double_AC_Voltage_Controllers/app/adc/adc.h:
 
-/Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/app/epwm/epwm.h:
+/Users/nov4ou/workspace_v12/Problems/Double_AC_Voltage_Controllers/app/epwm/epwm.h:
 
-/Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/app/key/key.h:
+/Users/nov4ou/workspace_v12/Problems/Double_AC_Voltage_Controllers/app/key/key.h:
 
-/Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/app/oled/oled.h:
+/Users/nov4ou/workspace_v12/Problems/Double_AC_Voltage_Controllers/app/oled/oled.h:
 
-/Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/app/spi/spi.h:
+/Users/nov4ou/workspace_v12/Problems/Double_AC_Voltage_Controllers/app/spi/spi.h:
 

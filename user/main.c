@@ -34,12 +34,15 @@ _Bool flag_voltage = 0;
 _Bool prev_flag_voltage = 0;
 
 extern float grid_voltage;
+extern float grid_inverter_current;
 float V_rms = 0;
 float V_rms_ref = 25;
 float output = 0;
 float dutycycle = 1000;
 float normalized_voltage;
 float ref_current;
+float curr_error;
+float curr_loop_out;
 
 Uint32 compare = 1700;
 Uint32 counter = 0;
