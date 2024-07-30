@@ -152,7 +152,7 @@ __interrupt void adc_isr(void) {
   current_graph[curr_index] = grid_inverter_current;
   curr_index = (curr_index + 1) % CURR_GRAPH_INDEX;
 
-  grid_inverter_voltage = 0.0333 * Voltage1[ConversionCount] - 61.893;
+  grid_inverter_voltage = 0.0335 * Voltage1[ConversionCount] - 61.954;
 
   // grid_inverter_voltage = (Vol1 - 1.502) * 41.61;
   // rectifier_volt_graph[rectifier_volt_index++] = rectifier_voltage;
@@ -160,14 +160,14 @@ __interrupt void adc_isr(void) {
   //   rectifier_volt_index = 0;
 
   grid_voltage = Voltage2[ConversionCount] * 0.0272 - 50.498;
-  voltage_graph[vol_index] = grid_voltage;
-  vol_index = (vol_index + 1) % VOL_GRAPH_INDEX;
+  // voltage_graph[vol_index] = grid_voltage;
+  // vol_index = (vol_index + 1) % VOL_GRAPH_INDEX;
   // grid_vol_graph[gridvindex++] = grid_voltage;
   // if (gridvindex > GRID_V_INDEX)
   //   gridvindex = 0;
 
   // 10m ohm
-  // grid_current = (Voltage3[ConversionCount] * 0.0016 - 2.9816) * 2;
+  grid_current = Voltage3[ConversionCount] * 0.0016 - 2.9739;
   // grid_current_graph[grid_curr_index++] = grid_current;
   // if (grid_curr_index > GRID_CURRENT_GRAPH)
   //   grid_curr_index = 0;

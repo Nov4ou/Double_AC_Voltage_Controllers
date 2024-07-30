@@ -32,6 +32,7 @@ _Bool flag = 0;
 _Bool prev_flag = 0;
 _Bool flag_voltage = 0;
 _Bool prev_flag_voltage = 0;
+float Kp_set = 15;
 
 extern float grid_voltage;
 extern float grid_inverter_current;
@@ -43,6 +44,8 @@ float normalized_voltage;
 float ref_current;
 float curr_error;
 float curr_loop_out;
+float V_mod;
+float ratio = 1;
 
 Uint32 compare = 1700;
 Uint32 counter = 0;
@@ -102,7 +105,8 @@ int main() {
   SPLL_1ph_SOGI_F_init(GRID_FREQ, ((float)(1.0 / ISR_FREQUENCY)), &spll1);
   SPLL_1ph_SOGI_F_coeff_update(((float)(1.0 / ISR_FREQUENCY)),
                                (float)(2 * PI * GRID_FREQ), &spll1);
-  PID_Init(&VoltageLoop, 0.06, 0.12, 0, 50, 50);
+  // PID_Init(&VoltageLoop, 0.06, 0.02, 0, 50, 50);
+  PID_Init(&VoltageLoop, 0.06, 1.2, 0, 50, 50);
 
   LED_Init();
   EPWM2_Init(MAX_CMPA);
@@ -232,9 +236,13 @@ __interrupt void cpu_timer1_isr(void) {
   if (abs(sineanalyzer_diff1.SigFreq - 50) < 5)
     V_rms = sineanalyzer_diff1.Vrms * (V_rms_ref * 1.414);
 
+  spll1.u[0] = normalized_voltage;
   SPLL_1ph_SOGI_F_FUNC(&spll1);
   SPLL_1ph_SOGI_F_coeff_update(((float)(1.0 / ISR_FREQUENCY)),
                                (float)(2 * PI * GRID_FREQ), &spll1);
+
+  V_mod = sin(spll1.theta[0]);
+  EPwm2Regs.CMPA.half.CMPA = (Uint16) (fabs(V_mod) * MAX_CMPA);
 }
 
 __interrupt void cpu_timer2_isr(void) {
@@ -243,11 +251,11 @@ __interrupt void cpu_timer2_isr(void) {
   // EPwm5Regs.CMPA.half.CMPA = compare;
   // EPwm6Regs.CMPA.half.CMPA = compare;
 
-  if (flag_voltage != prev_flag_voltage) {
+  // if (flag_voltage != prev_flag_voltage) {
     if (flag_voltage == 1) {
       /********************* Voltage Loop ************************/
       PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
-      output = 5 + VoltageLoop.output;
+      output = VoltageLoop.output;
       // dutycycle = output / 40;
       // compare = (Uint32)(dutycycle * MAX_CMPA);
       // // if (compare >= 2200)
@@ -259,16 +267,16 @@ __interrupt void cpu_timer2_isr(void) {
       /********************* Voltage Loop ************************/
 
       /********************* Current Loop ************************/
-      ref_current = abs(sin(spll1.theta[0])) * output;
-      curr_error = ref_current - abs(grid_inverter_current);
-      curr_loop_out = 15 * curr_error / 40;
+      ref_current = fabs(V_mod) * output * ratio;
+      curr_error = ref_current - fabs(grid_inverter_current);
+      curr_loop_out = Kp_set * curr_error / 10;
       compare = (Uint32)(curr_loop_out * MAX_CMPA);
       EPwm5Regs.CMPA.half.CMPA = compare;
       EPwm6Regs.CMPA.half.CMPA = compare;
       /********************* Current Loop ************************/
     }
-    prev_flag_voltage = flag_voltage;
-  }
+  //   prev_flag_voltage = flag_voltage;
+  // }
 }
 
 void PID_Init(PID *pid, float p, float i, float d, float maxI, float maxOut) {
