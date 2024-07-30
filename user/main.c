@@ -6,6 +6,7 @@
  */
 #include "F2806x_Device.h"   // F2806x Headerfile
 #include "F2806x_Examples.h" // F2806x Examples Headerfile
+#include "SPLL_1ph_SOGI_F.h"
 #include "Solar_F.h"
 #include "adc.h"
 #include "epwm.h"
@@ -25,6 +26,7 @@ extern Uint16 RamfuncsLoadSize;
 
 #define ISR_FREQUENCY 20000
 #define GRID_FREQ 50
+#define CURRENT_RMS 1.5
 
 _Bool flag = 0;
 _Bool prev_flag = 0;
@@ -35,6 +37,9 @@ float V_rms = 0;
 float V_rms_ref = 25;
 float output = 0;
 float dutycycle = 1000;
+float normalized_voltage;
+float ref_current;
+
 Uint32 compare = 1700;
 Uint32 counter = 0;
 Uint8 str[10];
@@ -93,7 +98,7 @@ int main() {
   SPLL_1ph_SOGI_F_init(GRID_FREQ, ((float)(1.0 / ISR_FREQUENCY)), &spll1);
   SPLL_1ph_SOGI_F_coeff_update(((float)(1.0 / ISR_FREQUENCY)),
                                (float)(2 * PI * GRID_FREQ), &spll1);
-  PID_Init(&VoltageLoop, 0.4, 0.1, 0, 50, 50);
+  PID_Init(&VoltageLoop, 0.06, 0.12, 0, 50, 50);
 
   LED_Init();
   EPWM2_Init(MAX_CMPA);
@@ -214,19 +219,25 @@ void LED_Init(void) {
 }
 
 __interrupt void cpu_timer1_isr(void) {
-  sineanalyzer_diff1.Vin = grid_voltage / (V_rms_ref * 1.414);
+  normalized_voltage = grid_voltage / (V_rms_ref * 1.414);
+  sineanalyzer_diff1.Vin = normalized_voltage;
   SINEANALYZER_DIFF_F_FUNC(&sineanalyzer_diff1);
   if (abs(sineanalyzer_diff1.SigFreq - 50) < 5)
     V_rms = sineanalyzer_diff1.Vrms * (V_rms_ref * 1.414);
+
+  SPLL_1ph_SOGI_F_FUNC(&spll1);
+  SPLL_1ph_SOGI_F_coeff_update(((float)(1.0 / ISR_FREQUENCY)),
+                               (float)(2 * PI * GRID_FREQ), &spll1);
 }
 
 __interrupt void cpu_timer2_isr(void) {
   GpioDataRegs.GPATOGGLE.bit.GPIO0 = 1;
 
-  EPwm5Regs.CMPA.half.CMPA = compare;
-  EPwm6Regs.CMPA.half.CMPA = compare;
+  // EPwm5Regs.CMPA.half.CMPA = compare;
+  // EPwm6Regs.CMPA.half.CMPA = compare;
 
   if (flag_voltage == 1) {
+    /********************* Voltage Loop ************************/
     PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
     output = 5 + VoltageLoop.output;
     dutycycle = output / 40;
@@ -237,6 +248,13 @@ __interrupt void cpu_timer2_isr(void) {
     //   compare = 50;
     EPwm5Regs.CMPA.half.CMPA = compare;
     EPwm6Regs.CMPA.half.CMPA = compare;
+    /********************* Voltage Loop ************************/
+
+    /********************* Current Loop ************************/
+    ref_current = sin(spll1.theta[0]) * CURRENT_RMS * 1.414;
+    curr_error = ref_current - grid_inverter_current;
+    curr_loop_out = Kp_set * curr_error + grid_inverter_c
+    /********************* Current Loop ************************/
   }
 }
 

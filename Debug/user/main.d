@@ -32,6 +32,7 @@ user/main.obj: /Users/nov4ou/workspace_v12/f2806x/common/include/F2806x_I2c_defi
 user/main.obj: /Users/nov4ou/workspace_v12/f2806x/common/include/F2806x_Dma_defines.h
 user/main.obj: /Users/nov4ou/workspace_v12/f2806x/common/include/F2806x_Cla_defines.h
 user/main.obj: /Users/nov4ou/workspace_v12/f2806x/common/include/F2806x_DefaultISR.h
+user/main.obj: /Applications/ti/solar/v1.2/float/include/SPLL_1ph_SOGI_F.h
 user/main.obj: /Applications/ti/solar/v1.2/float/include/Solar_F.h
 user/main.obj: /Applications/ti/ti-cgt-c2000_22.6.1.LTS/include/math.h
 user/main.obj: /Applications/ti/ti-cgt-c2000_22.6.1.LTS/include/_ti_config.h
@@ -63,7 +64,6 @@ user/main.obj: /Applications/ti/solar/v1.2/float/include/RAMPGEN_F.h
 user/main.obj: /Applications/ti/solar/v1.2/float/include/SINEANALYZER_DIFF_F.h
 user/main.obj: /Applications/ti/solar/v1.2/float/include/SINEANALYZER_DIFF_wPWR_F.h
 user/main.obj: /Applications/ti/solar/v1.2/float/include/SPLL_1ph_F.h
-user/main.obj: /Applications/ti/solar/v1.2/float/include/SPLL_1ph_SOGI_F.h
 user/main.obj: /Applications/ti/solar/v1.2/float/include/SPLL_3PH_DDSRF_F.h
 user/main.obj: /Applications/ti/solar/v1.2/float/include/SPLL_3PH_SRF_F.h
 user/main.obj: /Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/app/adc/adc.h
@@ -136,6 +136,8 @@ user/main.obj: /Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/ap
 
 /Users/nov4ou/workspace_v12/f2806x/common/include/F2806x_DefaultISR.h:
 
+/Applications/ti/solar/v1.2/float/include/SPLL_1ph_SOGI_F.h:
+
 /Applications/ti/solar/v1.2/float/include/Solar_F.h:
 
 /Applications/ti/ti-cgt-c2000_22.6.1.LTS/include/math.h:
@@ -197,8 +199,6 @@ user/main.obj: /Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/ap
 /Applications/ti/solar/v1.2/float/include/SINEANALYZER_DIFF_wPWR_F.h:
 
 /Applications/ti/solar/v1.2/float/include/SPLL_1ph_F.h:
-
-/Applications/ti/solar/v1.2/float/include/SPLL_1ph_SOGI_F.h:
 
 /Applications/ti/solar/v1.2/float/include/SPLL_3PH_DDSRF_F.h:
 

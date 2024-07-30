@@ -1,7 +1,7 @@
 ******************************************************************************
              TMS320C2000 Linker Unix v22.6.1                   
 ******************************************************************************
->> Linked Tue Jul 30 13:38:13 2024
+>> Linked Tue Jul 30 14:16:01 2024
 
 OUTPUT FILE NAME:   <Double_AC_Voltage_Controllers.out>
 ENTRY POINT SYMBOL: "_c_int00"  address: 003f56ad
@@ -12,14 +12,14 @@ MEMORY CONFIGURATION
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
 PAGE 0:
-  RAML0                 00008000   00000800  000000f0  00000710  RWIX
+  RAML0                 00008000   00000800  0000010d  000006f3  RWIX
   RAML1                 00008800   00000400  00000000  00000400  RWIX
   OTP                   003d7800   00000400  00000000  00000400  RWIX
   FLASHH                003d8000   00004000  00000000  00004000  RWIX
   FLASHG                003dc000   00004000  00000000  00004000  RWIX
   FLASHF                003e0000   00004000  00000000  00004000  RWIX
   FLASHE                003e4000   00004000  00000000  00004000  RWIX
-  FLASHD                003e8000   00004000  000000f0  00003f10  RWIX
+  FLASHD                003e8000   00004000  0000010d  00003ef3  RWIX
   FLASHC                003ec000   00004000  00000000  00004000  RWIX
   FLASHA                003f4000   00003f80  000022a3  00001cdd  RWIX
   CSM_RSVD              003f7f80   00000076  00000000  00000076  RWIX
@@ -118,10 +118,10 @@ section   page    origin      length       input sections
 
 .pinit     0    003f4000    00000000     UNINITIALIZED
 
-ramfuncs   0    003e8000    000000f0     RUN ADDR = 00008000
-                  003e8000    000000d1     main.obj (ramfuncs:retain)
-                  003e80d1    0000001b     F2806x_SysCtrl.obj (ramfuncs)
-                  003e80ec    00000004     F2806x_usDelay.obj (ramfuncs)
+ramfuncs   0    003e8000    0000010d     RUN ADDR = 00008000
+                  003e8000    000000ee     main.obj (ramfuncs:retain)
+                  003e80ee    0000001b     F2806x_SysCtrl.obj (ramfuncs)
+                  003e8109    00000004     F2806x_usDelay.obj (ramfuncs)
 
 .text      0    003f4000    000018f3     
                   003f4000    00000413     main.obj (.text)
@@ -465,9 +465,9 @@ MODULE SUMMARY
        Total:                          2438   256                3574              
                                                                                    
     ./user/
-       main.obj                        1461   92                 208               
+       main.obj                        1519   92                 208               
     +--+-------------------------------+------+------------------+--------------------+
-       Total:                          1461   92                 208               
+       Total:                          1519   92                 208               
                                                                                    
     /Applications/ti/solar/v1.2/float/lib/Solar_Lib_Float.lib
        SPLL_1ph_SOGI_F.obj             369    0                  0                 
@@ -496,7 +496,7 @@ MODULE SUMMARY
                                                                                    
        Stack:                          0      0                  768               
     +--+-------------------------------+------+------------------+--------------------+
-       Grand Total:                    6869   2478               6231              
+       Grand Total:                    6927   2478               6231              
 
 
 GLOBAL DATA SYMBOLS: SORTED BY DATA PAGE
@@ -633,9 +633,11 @@ address     data page           name
 0000a686     29a (0000a680)     _V_rms_ref
 0000a688     29a (0000a680)     _output
 0000a68a     29a (0000a680)     _dutycycle
-0000a68c     29a (0000a680)     _compare
-0000a68e     29a (0000a680)     _counter
-0000a690     29a (0000a680)     _VoltageLoop
+0000a68c     29a (0000a680)     _normalized_voltage
+0000a68e     29a (0000a680)     _ref_current
+0000a690     29a (0000a680)     _compare
+0000a692     29a (0000a680)     _counter
+0000a694     29a (0000a680)     _VoltageLoop
 
 0000a6c0     29b (0000a6c0)     _sineanalyzer_diff1
 
@@ -719,7 +721,7 @@ page  address   name
 0     003f4675  _DINTCH4_ISR                    
 0     003f467f  _DINTCH5_ISR                    
 0     003f4689  _DINTCH6_ISR                    
-0     000080ec  _DSP28x_usDelay                 
+0     00008109  _DSP28x_usDelay                 
 1     00000880  _DevEmuRegs                     
 0     003f4edd  _DisableDog                     
 1     00001000  _DmaRegs                        
@@ -813,7 +815,7 @@ page  address   name
 0     003f5332  _InitEPwm8Gpio                  
 0     003f52a1  _InitEPwmGpio                   
 0     003f5342  _InitEPwmSyncGpio               
-0     000080d1  _InitFlash                      
+0     000080ee  _InitFlash                      
 0     003f4f67  _InitPeripheralClocks           
 0     003f57ea  _InitPieCtrl                    
 0     003f5839  _InitPieVectTable               
@@ -858,8 +860,8 @@ page  address   name
 1     00000d00  _PieVectTable                   
 0     003f610c  _PieVectTableInit               
 0     003f4431  _RTOSINT_ISR                    
-0     003e80f0  _RamfuncsLoadEnd                
-abs   000000f0  _RamfuncsLoadSize               
+0     003e810d  _RamfuncsLoadEnd                
+abs   0000010d  _RamfuncsLoadSize               
 0     003e8000  _RamfuncsLoadStart              
 0     00008000  _RamfuncsRunStart               
 0     003f46a7  _SCIRXINTA_ISR                  
@@ -907,7 +909,7 @@ abs   000000f0  _RamfuncsLoadSize
 1     0000a746  _Voltage2                       
 1     0000a750  _Voltage3                       
 1     0000a75a  _Voltage4                       
-1     0000a690  _VoltageLoop                    
+1     0000a694  _VoltageLoop                    
 0     003f450d  _WAKEINT_ISR                    
 0     003f44e5  _XINT1_ISR                      
 0     003f44ef  _XINT2_ISR                      
@@ -941,13 +943,13 @@ abs   ffffffff  ___pinit__
 0     003f5374  _adc_isr                        
 0     003f5ee4  _asc2_0806                      
 0     003f56ad  _c_int00                        
-1     0000a68c  _compare                        
+1     0000a690  _compare                        
 0     003f585f  _copy_in                        
 0     003f564a  _cos                            
 0     003f564a  _cosf                           
-1     0000a68e  _counter                        
+1     0000a692  _counter                        
 0     00008000  _cpu_timer1_isr                 
-0     00008066  _cpu_timer2_isr                 
+0     0000808c  _cpu_timer2_isr                 
 1     0000a65d  _curr_index                     
 1     0000a000  _current_graph                  
 1     0000a68a  _dutycycle                      
@@ -969,10 +971,12 @@ abs   ffffffff  ___pinit__
 0     003f54ad  _kalman_filter                  
 0     003f4000  _main                           
 0     003f58a5  _memcpy                         
+1     0000a68c  _normalized_voltage             
 0     003f4db7  _oled_pow                       
 1     0000a688  _output                         
 1     0000a681  _prev_flag                      
 1     0000a67e  _rectifier_dutycycle            
+1     0000a68e  _ref_current                    
 0     003f47a4  _rsvd_ISR                       
 0     003f55e4  _sin                            
 1     0000a67c  _sineValue1                     
@@ -998,11 +1002,11 @@ page  address   name
 ----  -------   ----                            
 0     00008000  _RamfuncsRunStart               
 0     00008000  _cpu_timer1_isr                 
-0     00008066  _cpu_timer2_isr                 
-0     000080d1  _InitFlash                      
-0     000080ec  _DSP28x_usDelay                 
+0     0000808c  _cpu_timer2_isr                 
+0     000080ee  _InitFlash                      
+0     00008109  _DSP28x_usDelay                 
 0     003e8000  _RamfuncsLoadStart              
-0     003e80f0  _RamfuncsLoadEnd                
+0     003e810d  _RamfuncsLoadEnd                
 0     003f4000  .text                           
 0     003f4000  ___text__                       
 0     003f4000  _main                           
@@ -1292,9 +1296,11 @@ page  address   name
 1     0000a686  _V_rms_ref                      
 1     0000a688  _output                         
 1     0000a68a  _dutycycle                      
-1     0000a68c  _compare                        
-1     0000a68e  _counter                        
-1     0000a690  _VoltageLoop                    
+1     0000a68c  _normalized_voltage             
+1     0000a68e  _ref_current                    
+1     0000a690  _compare                        
+1     0000a692  _counter                        
+1     0000a694  _VoltageLoop                    
 1     0000a6c0  _sineanalyzer_diff1             
 1     0000a700  _spll1                          
 1     0000a746  _Voltage2                       
@@ -1309,7 +1315,7 @@ page  address   name
 1     0000a778  _errno                          
 1     003d7e80  _PartIdRegs                     
 1     003f7ff8  _CsmPwl                         
-abs   000000f0  _RamfuncsLoadSize               
+abs   0000010d  _RamfuncsLoadSize               
 abs   00000300  __STACK_SIZE                    
 abs   ffffffff  ___TI_pprof_out_hndl            
 abs   ffffffff  ___TI_prof_data_size            
@@ -1320,4 +1326,4 @@ abs   ffffffff  ___pinit__
 abs   ffffffff  binit                           
 abs   ffffffff  pinit                           
 
-[323 symbols]
+[325 symbols]
