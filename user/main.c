@@ -225,10 +225,8 @@ __interrupt void cpu_timer2_isr(void) {
     output = 5 + VoltageLoop.output;
     dutycycle = output / 40;
     compare = (Uint32)(dutycycle * MAX_CMPA);
-    // if (compare >= 2200)
-    //   compare = 2200;
-    // if (compare <= 50)
-    //   compare = 50;
+    if (compare >= 2230)
+      compare = 2230;
     EPwm5Regs.CMPA.half.CMPA = compare;
     EPwm6Regs.CMPA.half.CMPA = compare;
   }
