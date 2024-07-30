@@ -261,8 +261,8 @@ void EPWM5_Init(Uint16 tbprd) {
   EPwm5Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
   EPwm5Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
   EPwm5Regs.DBCTL.bit.IN_MODE = DBA_ALL;
-  EPwm5Regs.DBRED = 10;
-  EPwm5Regs.DBFED = 10;
+  EPwm5Regs.DBRED = 5;
+  EPwm5Regs.DBFED = 5;
 
 
   EALLOW;
@@ -313,8 +313,8 @@ void EPWM6_Init(Uint16 tbprd) {
   EPwm6Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
   EPwm6Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
   EPwm6Regs.DBCTL.bit.IN_MODE = DBA_ALL;
-  EPwm6Regs.DBRED = 10;
-  EPwm6Regs.DBFED = 10;
+  EPwm6Regs.DBRED = 5;
+  EPwm6Regs.DBFED = 5;
 
 
 

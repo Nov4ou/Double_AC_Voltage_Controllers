@@ -33,7 +33,7 @@ app/adc/adc.obj: /Users/nov4ou/workspace_v12/f2806x/common/include/F2806x_I2c_de
 app/adc/adc.obj: /Users/nov4ou/workspace_v12/f2806x/common/include/F2806x_Dma_defines.h
 app/adc/adc.obj: /Users/nov4ou/workspace_v12/f2806x/common/include/F2806x_Cla_defines.h
 app/adc/adc.obj: /Users/nov4ou/workspace_v12/f2806x/common/include/F2806x_DefaultISR.h
-app/adc/adc.obj: /Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/epwm/epwm.h
+app/adc/adc.obj: /Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/app/epwm/epwm.h
 
 ../app/adc/adc.c:
 
@@ -101,5 +101,5 @@ app/adc/adc.obj: /Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/e
 
 /Users/nov4ou/workspace_v12/f2806x/common/include/F2806x_DefaultISR.h:
 
-/Users/nov4ou/workspace_v12/Double_AC_Voltage_Controllers/app/epwm/epwm.h:
+/Users/nov4ou/workspace_ccstheia/Double_AC_Voltage_Controllers/app/epwm/epwm.h:
 

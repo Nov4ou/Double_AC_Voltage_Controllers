@@ -24,6 +24,7 @@ extern Uint16 RamfuncsLoadSize;
 // // #pragma CODE_SECTION(OLED_Update, "ramfuncs");
 
 #define ISR_FREQUENCY 20000
+#define GRID_FREQ 50
 
 _Bool flag = 0;
 _Bool prev_flag = 0;
@@ -47,6 +48,7 @@ typedef struct {
 PID VoltageLoop;
 
 SINEANALYZER_DIFF_F sineanalyzer_diff1;
+SPLL_1ph_SOGI_F spll1;
 
 void LED_Init(void);
 __interrupt void cpu_timer1_isr(void);
@@ -88,6 +90,9 @@ int main() {
   sineanalyzer_diff1.SampleFreq = ISR_FREQUENCY;
   sineanalyzer_diff1.nsamplesMin = 363 / 2;
   sineanalyzer_diff1.nsamplesMax = 444 / 2;
+  SPLL_1ph_SOGI_F_init(GRID_FREQ, ((float)(1.0 / ISR_FREQUENCY)), &spll1);
+  SPLL_1ph_SOGI_F_coeff_update(((float)(1.0 / ISR_FREQUENCY)),
+                               (float)(2 * PI * GRID_FREQ), &spll1);
   PID_Init(&VoltageLoop, 0.4, 0.1, 0, 50, 50);
 
   LED_Init();
@@ -171,13 +176,13 @@ int main() {
         EPwm5Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
         EPwm5Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
         EPwm5Regs.DBCTL.bit.IN_MODE = DBA_ALL;
-        EPwm5Regs.DBRED = 10;
-        EPwm5Regs.DBFED = 10;
+        EPwm5Regs.DBRED = 1;
+        EPwm5Regs.DBFED = 1;
         EPwm6Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
         EPwm6Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
         EPwm6Regs.DBCTL.bit.IN_MODE = DBA_ALL;
-        EPwm6Regs.DBRED = 10;
-        EPwm6Regs.DBFED = 10;
+        EPwm6Regs.DBRED = 1;
+        EPwm6Regs.DBFED = 1;
         // Set actions for inverter
         EPwm5Regs.AQCTLA.bit.ZRO = AQ_NO_ACTION;
         EPwm5Regs.AQCTLA.bit.CAU = AQ_CLEAR;
@@ -217,15 +222,19 @@ __interrupt void cpu_timer1_isr(void) {
 
 __interrupt void cpu_timer2_isr(void) {
   GpioDataRegs.GPATOGGLE.bit.GPIO0 = 1;
+
+  EPwm5Regs.CMPA.half.CMPA = compare;
+  EPwm6Regs.CMPA.half.CMPA = compare;
+
   if (flag_voltage == 1) {
     PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
     output = 5 + VoltageLoop.output;
     dutycycle = output / 40;
     compare = (Uint32)(dutycycle * MAX_CMPA);
-    if (compare >= 2200)
-      compare = 2200;
-    if (compare <= 50)
-      compare = 50;
+    // if (compare >= 2200)
+    //   compare = 2200;
+    // if (compare <= 50)
+    //   compare = 50;
     EPwm5Regs.CMPA.half.CMPA = compare;
     EPwm6Regs.CMPA.half.CMPA = compare;
   }
