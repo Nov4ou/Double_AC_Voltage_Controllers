@@ -23,7 +23,10 @@ extern Uint16 RamfuncsLoadSize;
 #pragma CODE_SECTION(cpu_timer2_isr, "ramfuncs");
 // // #pragma CODE_SECTION(OLED_Update, "ramfuncs");
 
+#define Kp 50.7089
+#define Ki 5000.0
 #define ISR_FREQUENCY 20000
+#define GRID_FREQ 50
 
 _Bool flag = 0;
 _Bool prev_flag = 0;
@@ -34,6 +37,8 @@ float V_rms = 0;
 float V_rms_ref = 25;
 float output = 0;
 float dutycycle = 1000;
+float normalized_voltage;
+float V_mod;
 Uint32 compare = 1700;
 Uint32 counter = 0;
 Uint8 str[10];
@@ -47,6 +52,7 @@ typedef struct {
 PID VoltageLoop;
 
 SINEANALYZER_DIFF_F sineanalyzer_diff1;
+SPLL_1ph_SOGI_F spll1;
 
 void LED_Init(void);
 __interrupt void cpu_timer1_isr(void);
@@ -88,6 +94,11 @@ int main() {
   sineanalyzer_diff1.SampleFreq = ISR_FREQUENCY;
   sineanalyzer_diff1.nsamplesMin = 363 / 2;
   sineanalyzer_diff1.nsamplesMax = 444 / 2;
+  SPLL_1ph_SOGI_F_init(GRID_FREQ, ((float)(1.0 / ISR_FREQUENCY)), &spll1);
+  SPLL_1ph_SOGI_F_coeff_update(((float)(1.0 / ISR_FREQUENCY)),
+                               (float)(2 * PI * GRID_FREQ), &spll1);
+  spll1.lpf_coeff.B0_lf = (float32)((2 * Kp + Ki / ISR_FREQUENCY) / 2);
+  spll1.lpf_coeff.B1_lf = (float32)(-(2 * Kp - Ki / ISR_FREQUENCY) / 2);
   PID_Init(&VoltageLoop, 0.4, 0.1, 0, 50, 50);
 
   LED_Init();
@@ -212,10 +223,16 @@ void LED_Init(void) {
 }
 
 __interrupt void cpu_timer1_isr(void) {
-  sineanalyzer_diff1.Vin = grid_voltage / (V_rms_ref * 1.414);
+  normalized_voltage = grid_voltage / (V_rms_ref * 1.414);
+  sineanalyzer_diff1.Vin = normalized_voltage;
   SINEANALYZER_DIFF_F_FUNC(&sineanalyzer_diff1);
   if (abs(sineanalyzer_diff1.SigFreq - 50) < 5)
     V_rms = sineanalyzer_diff1.Vrms * (V_rms_ref * 1.414);
+
+  spll1.u[0] = normalized_voltage;
+  SPLL_1ph_SOGI_F_FUNC(&spll1);
+  SPLL_1ph_SOGI_F_coeff_update(((float)(1.0 / ISR_FREQUENCY)),
+                               (float)(2 * PI * GRID_FREQ), &spll1);
 }
 
 __interrupt void cpu_timer2_isr(void) {
@@ -230,6 +247,10 @@ __interrupt void cpu_timer2_isr(void) {
     EPwm5Regs.CMPA.half.CMPA = compare;
     EPwm6Regs.CMPA.half.CMPA = compare;
   }
+
+  V_mod = sin(spll1.theta[0]);
+  EPwm2Regs.CMPA.half.CMPA = (Uint32)((V_mod + 1) * MAX_CMPA / 2);
+  // EPwm6Regs.CMPA.half.CMPA = compare;
 }
 
 void PID_Init(PID *pid, float p, float i, float d, float maxI, float maxOut) {
