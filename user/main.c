@@ -283,12 +283,12 @@ __interrupt void cpu_timer2_isr(void) {
     /********************* Voltage Loop ************************/
     PID_Calc(&VoltageLoop, V_rms_softstart, V_rms);
     output = VoltageLoop.output;
-    if (output > 2 * 1.414)
-      output = 2 * 1.414;
-    if (output < -2 * 1.414)
-      output = -2 * 1.414;
+    if (output > CURRENT_RMS * 1.414)
+      output = CURRENT_RMS * 1.414;
+    if (output < -1 * CURRENT_RMS * 1.414)
+      output = -1 * CURRENT_RMS * 1.414;
 
-    PID_Calc(&CurrentLoop, (output + 2 * 1.414) * fabs(V_mod),
+    PID_Calc(&CurrentLoop, (output + CURRENT_RMS * 1.414) * fabs(V_mod),
              fabs(grid_current));
     curr_loop_out = (CurrentLoop.output + V_rms_softstart) / V_rms_in;
     compare = (Uint32)(curr_loop_out * MAX_CMPA);
