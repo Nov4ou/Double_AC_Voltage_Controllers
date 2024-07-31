@@ -42,7 +42,8 @@ extern float grid_inverter_current;
 extern float grid_inverter_voltage;
 extern float grid_current;
 float V_rms = 0;
-float V_rms_ref = 5;
+float V_rms_ref = 10;
+float V_rms_in = 20;
 float output = 0;
 float dutycycle = 1000;
 float normalized_voltage1;
@@ -113,8 +114,9 @@ int main() {
                                (float)(2 * PI * GRID_FREQ), &spll1);
   spll1.lpf_coeff.B0_lf = (float32)((2 * Kp + Ki / ISR_FREQUENCY) / 2);
   spll1.lpf_coeff.B1_lf = (float32)(-(2 * Kp - Ki / ISR_FREQUENCY) / 2);
-  PID_Init(&VoltageLoop, 0.06, 0.02, 0, 50, 50);
-  PID_Init(&CurrentLoop, 1, 0.001, 0, 50, 50);
+  PID_Init(&VoltageLoop, 0.04, 0.02, 0, 50, 50);
+  // PID_Init(&CurrentLoop, 1, 0.001, 0, 50, 50);
+  PID_Init(&CurrentLoop, 1, 0.000, 0, 50, 50);
 
   LED_Init();
   EPWM2_Init(MAX_CMPA);
@@ -265,9 +267,19 @@ __interrupt void cpu_timer2_isr(void) {
     /********************* Voltage Loop ************************/
     PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
     output = VoltageLoop.output;
-    PID_Calc(&CurrentLoop, output * fabs(V_mod), fabs(grid_current));
-    curr_loop_out = CurrentLoop.output / 40;
+    if (output > 2 * 1.414)
+      output = 2 * 1.414;
+    if (output < -2 * 1.414)
+      output = -2 * 1.414;
+
+    PID_Calc(&CurrentLoop, (output + 2 * 1.414) * fabs(V_mod), fabs(grid_current));
+    curr_loop_out = (CurrentLoop.output + V_rms_ref) / V_rms_in;
     compare = (Uint32)(curr_loop_out * MAX_CMPA);
+    if (compare >= 2200)
+      compare = 2200;
+    if (compare <= 50)
+      compare = 50;
+
     EPwm5Regs.CMPA.half.CMPA = compare;
     EPwm6Regs.CMPA.half.CMPA = compare;
 
