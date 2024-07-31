@@ -29,7 +29,7 @@ extern Uint16 RamfuncsLoadSize;
 // #define Ki 1063.14
 #define Ki 5000.0
 #define GRID_FREQ 50
-#define CURRENT_RMS 0.5
+#define CURRENT_RMS 0.64
 #define CUTOFF_FREQ 20
 
 _Bool flag = 0;
