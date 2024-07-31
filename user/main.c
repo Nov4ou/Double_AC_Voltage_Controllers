@@ -264,7 +264,7 @@ __interrupt void cpu_timer2_isr(void) {
     /********************* Voltage Loop ************************/
     PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
     output = VoltageLoop.output;
-    PID_Calc(&CurrentLoop, output * fabs(V_mod), grid_inverter_current);
+    PID_Calc(&CurrentLoop, output * fabs(V_mod), fabs(grid_inverter_current));
     curr_loop_out = CurrentLoop.output / 40;
     compare = (Uint32)(curr_loop_out * MAX_CMPA);
     EPwm5Regs.CMPA.half.CMPA = compare;
