@@ -265,7 +265,7 @@ __interrupt void cpu_timer2_isr(void) {
   // if (flag_voltage != prev_flag_voltage) {
   if (flag_voltage == 1) {
     /********************* Voltage Loop ************************/
-    PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
+    PID_Calc(&VoltageLoop, V_rms_ref - 0.2, V_rms);
     output = VoltageLoop.output;
     if (output > 2 * 1.414)
       output = 2 * 1.414;
@@ -329,14 +329,14 @@ void PID_Calc(PID *pid, float reference, float feedback) {
 void OLED_Update() {
   counter++;
   if (counter == 5000) {
-    OLED_ShowString(0, 0, "State: ", 16);
+    OLED_ShowString(0, 0, "Master: ", 16);
     if (flag == 1) {
       OLED_ShowString(83, 0, " ON ", 16);
     } else {
       OLED_ShowString(83, 0, " OFF", 16);
     }
 
-    OLED_ShowString(0, 2, "Vol Loop: ", 16);
+    OLED_ShowString(0, 2, "Dual Loop: ", 16);
     if (flag_voltage == 1) {
       OLED_ShowString(83, 2, " ON ", 16);
     } else {
