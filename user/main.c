@@ -28,7 +28,7 @@ extern Uint16 RamfuncsLoadSize;
 #define ISR_FREQUENCY 20000
 #define GRID_FREQ 50
 
-_Bool flag = 0;
+_Bool flag = 1;
 _Bool prev_flag = 0;
 _Bool flag_voltage = 0;
 
