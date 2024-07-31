@@ -352,7 +352,7 @@ __interrupt void cpu_timer2_isr(void) {
       vol_soft_shutdown = 0;
 
     lpf_out =
-        filtered_I_rms_total * CURRENT_RMS * 1.414 * ratio * curr_soft_start;
+        filtered_I_rms_total * 1.414 * ratio * curr_soft_start;
 
     PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
     output = VoltageLoop.output;
