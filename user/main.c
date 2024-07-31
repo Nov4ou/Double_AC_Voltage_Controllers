@@ -29,7 +29,7 @@ extern Uint16 RamfuncsLoadSize;
 // #define Ki 1063.14
 #define Ki 5000.0
 #define GRID_FREQ 50
-#define CURRENT_RMS 0.3
+#define CURRENT_RMS 0.5
 #define CUTOFF_FREQ 20
 
 _Bool flag = 0;
@@ -141,7 +141,7 @@ int main() {
   spll1.lpf_coeff.B1_lf = (float32)(-(2 * Kp - Ki / ISR_FREQUENCY) / 2);
   PID_Init(&VoltageLoop, 0.04, 0.02, 0, 50, 50);
   // PID_Init(&CurrentLoop, 1, 0.001, 0, 50, 50);
-  PID_Init(&CurrentLoop, 1, 0.000, 0, 50, 50);
+  PID_Init(&CurrentLoop, 3.5, 0.000, 0, 50, 50);
   initLowPassFilter(&filter, CUTOFF_FREQ, ISR_FREQUENCY);
 
   LED_Init();
@@ -298,9 +298,6 @@ __interrupt void cpu_timer1_isr(void) {
 __interrupt void cpu_timer2_isr(void) {
   GpioDataRegs.GPATOGGLE.bit.GPIO0 = 1;
 
-  // EPwm5Regs.CMPA.half.CMPA = compare;
-  // EPwm6Regs.CMPA.half.CMPA = compare;
-
   if (flag_voltage == 0) {
     V_rms_softstart = 0;
     compare_soft_vol -= 0.66;
@@ -309,14 +306,14 @@ __interrupt void cpu_timer2_isr(void) {
     EPwm5Regs.CMPA.half.CMPA = (Uint16)compare_soft_vol;
     EPwm6Regs.CMPA.half.CMPA = (Uint16)compare_soft_vol;
   }
-  // if (flag_current == 0) {
-  //   // V_rms_softstart = 0;
-  //   compare_soft_curr -= 0.66;
-  //   if (compare_soft_curr < 0)
-  //     compare_soft_curr = 0;
-  //   EPwm5Regs.CMPA.half.CMPA = (Uint16)compare_soft_curr;
-  //   EPwm6Regs.CMPA.half.CMPA = (Uint16)compare_soft_curr;
-  // }
+  if (flag_current == 0 && flag_voltage == 0) {
+    // V_rms_softstart = 0;
+    compare_soft_curr -= 0.66;
+    if (compare_soft_curr < 0)
+      compare_soft_curr = 0;
+    EPwm5Regs.CMPA.half.CMPA = (Uint16)compare_soft_curr;
+    EPwm6Regs.CMPA.half.CMPA = (Uint16)compare_soft_curr;
+  }
 
   // if (flag_voltage != prev_flag_voltage) {
   if (flag_voltage == 1) {
@@ -345,26 +342,17 @@ __interrupt void cpu_timer2_isr(void) {
     EPwm5Regs.CMPA.half.CMPA = compare;
     EPwm6Regs.CMPA.half.CMPA = compare;
     prev_flag_voltage = flag_voltage;
-    /********************* Current Loop ************************/
-    // ref_current = fabs(V_mod) * output * ratio;
-    // curr_error = ref_current - fabs(grid_inverter_current);
-    // // curr_loop_out = Kp_set * curr_error / 10;
-    // curr_loop_out = Kp_set * curr_error / 40;
-    // compare = (Uint32)(curr_loop_out * MAX_CMPA);
-    // EPwm5Regs.CMPA.half.CMPA = compare;
-    // EPwm6Regs.CMPA.half.CMPA = compare;
-    /********************* Current Loop ************************/
   }
   if (flag_current == 1) {
-    curr_soft_start += 0.001;
+    curr_soft_start += 0.01;
     if (curr_soft_start >= 1)
       curr_soft_start = 1;
-    vol_soft_shutdown -= 0.001;
+    vol_soft_shutdown -= 0.01;
     if (vol_soft_shutdown <= 0)
       vol_soft_shutdown = 0;
 
     lpf_out =
-        filtered_I_rms_total * CURRENT_RMS * 1.414 / ratio * curr_soft_start;
+        filtered_I_rms_total * CURRENT_RMS * 1.414 * ratio * curr_soft_start;
 
     PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
     output = VoltageLoop.output;
