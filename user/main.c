@@ -272,11 +272,11 @@ __interrupt void cpu_timer1_isr(void) {
   SPLL_1ph_SOGI_F_coeff_update(((float)(1.0 / ISR_FREQUENCY)),
                                (float)(2 * PI * GRID_FREQ), &spll1);
 
-  normalized_voltage3 = grid_inverter_current / 6;
+  normalized_voltage3 = grid_inverter_current / 4; // Change after
   sineanalyzer_diff2.Vin = normalized_voltage3;
   SINEANALYZER_DIFF_F_FUNC(&sineanalyzer_diff2);
   if (abs(sineanalyzer_diff2.SigFreq - 50) < 5)
-    I_rms_total = sineanalyzer_diff1.Vrms * 6;
+    I_rms_total = sineanalyzer_diff2.Vrms * 4;
 
   V_mod = sin(spll1.theta[0]);
   EPwm2Regs.CMPA.half.CMPA = (Uint16)(fabs(V_mod) * MAX_CMPA);

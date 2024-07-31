@@ -2,7 +2,7 @@
 <link_info>
    <banner>TMS320C2000 Linker Unix v22.6.1.LTS</banner>
    <copyright>Copyright (c) 1996-2018 Texas Instruments Incorporated</copyright>
-   <link_time>0x66aa5d69</link_time>
+   <link_time>0x66aa6294</link_time>
    <link_errors>0x0</link_errors>
    <output_file>Double_AC_Voltage_Controllers.out</output_file>
    <entry_point>
@@ -523,20 +523,20 @@
          <name>ramfuncs:retain</name>
          <load_address>0x3e8000</load_address>
          <run_address>0x8000</run_address>
-         <size>0x1b5</size>
+         <size>0x1b3</size>
          <input_file_ref idref="fl-15"/>
       </object_component>
       <object_component id="oc-164">
          <name>ramfuncs</name>
-         <load_address>0x3e81b5</load_address>
-         <run_address>0x81b5</run_address>
+         <load_address>0x3e81b3</load_address>
+         <run_address>0x81b3</run_address>
          <size>0x1b</size>
          <input_file_ref idref="fl-13"/>
       </object_component>
       <object_component id="oc-ed">
          <name>ramfuncs</name>
-         <load_address>0x3e81d0</load_address>
-         <run_address>0x81d0</run_address>
+         <load_address>0x3e81ce</load_address>
+         <run_address>0x81ce</run_address>
          <size>0x4</size>
          <input_file_ref idref="fl-14"/>
       </object_component>
@@ -2371,7 +2371,7 @@
          <name>ramfuncs</name>
          <load_address>0x3e8000</load_address>
          <run_address>0x8000</run_address>
-         <size>0x1d4</size>
+         <size>0x1d2</size>
          <contents>
             <object_component_ref idref="oc-f5"/>
             <object_component_ref idref="oc-164"/>
@@ -3216,18 +3216,18 @@
          <page_id>0x0</page_id>
          <origin>0x8000</origin>
          <length>0x800</length>
-         <used_space>0x1d4</used_space>
-         <unused_space>0x62c</unused_space>
+         <used_space>0x1d2</used_space>
+         <unused_space>0x62e</unused_space>
          <attributes>RWIX</attributes>
          <usage_details>
             <allocated_space>
                <start_address>0x8000</start_address>
-               <size>0x1d4</size>
+               <size>0x1d2</size>
                <logical_group_ref idref="lg-6"/>
             </allocated_space>
             <available_space>
-               <start_address>0x81d4</start_address>
-               <size>0x62c</size>
+               <start_address>0x81d2</start_address>
+               <size>0x62e</size>
             </available_space>
          </usage_details>
       </memory_area>
@@ -3302,18 +3302,18 @@
          <page_id>0x0</page_id>
          <origin>0x3e8000</origin>
          <length>0x4000</length>
-         <used_space>0x1d4</used_space>
-         <unused_space>0x3e2c</unused_space>
+         <used_space>0x1d2</used_space>
+         <unused_space>0x3e2e</unused_space>
          <attributes>RWIX</attributes>
          <usage_details>
             <allocated_space>
                <start_address>0x3e8000</start_address>
-               <size>0x1d4</size>
+               <size>0x1d2</size>
                <logical_group_ref idref="lg-6"/>
             </allocated_space>
             <available_space>
-               <start_address>0x3e81d4</start_address>
-               <size>0x3e2c</size>
+               <start_address>0x3e81d2</start_address>
+               <size>0x3e2e</size>
             </available_space>
          </usage_details>
       </memory_area>
@@ -4547,7 +4547,7 @@
       </symbol>
       <symbol id="sm-1">
          <name>_RamfuncsLoadEnd</name>
-         <value>0x3e81d4</value>
+         <value>0x3e81d2</value>
       </symbol>
       <symbol id="sm-2">
          <name>_RamfuncsRunStart</name>
@@ -4555,7 +4555,7 @@
       </symbol>
       <symbol id="sm-3">
          <name>_RamfuncsLoadSize</name>
-         <value>0x1d4</value>
+         <value>0x1d2</value>
       </symbol>
       <symbol id="sm-4">
          <name>cinit</name>
@@ -5813,7 +5813,7 @@
       </symbol>
       <symbol id="sm-426">
          <name>_InitFlash</name>
-         <value>0x81b5</value>
+         <value>0x81b3</value>
          <object_component_ref idref="oc-164"/>
       </symbol>
       <symbol id="sm-428">
@@ -5843,7 +5843,7 @@
       </symbol>
       <symbol id="sm-43d">
          <name>_DSP28x_usDelay</name>
-         <value>0x81d0</value>
+         <value>0x81ce</value>
          <object_component_ref idref="oc-ed"/>
       </symbol>
       <symbol id="sm-487">
@@ -5858,7 +5858,7 @@
       </symbol>
       <symbol id="sm-48b">
          <name>_cpu_timer2_isr</name>
-         <value>0x80d2</value>
+         <value>0x80d0</value>
          <object_component_ref idref="oc-f5"/>
       </symbol>
       <symbol id="sm-48d">
