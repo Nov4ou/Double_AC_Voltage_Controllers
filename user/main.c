@@ -309,14 +309,14 @@ __interrupt void cpu_timer2_isr(void) {
     EPwm5Regs.CMPA.half.CMPA = (Uint16)compare_soft_vol;
     EPwm6Regs.CMPA.half.CMPA = (Uint16)compare_soft_vol;
   }
-  if (flag_current == 0) {
-    // V_rms_softstart = 0;
-    compare_soft_curr -= 0.66;
-    if (compare_soft_curr < 0)
-      compare_soft_curr = 0;
-    EPwm5Regs.CMPA.half.CMPA = (Uint16)compare_soft_curr;
-    EPwm6Regs.CMPA.half.CMPA = (Uint16)compare_soft_curr;
-  }
+  // if (flag_current == 0) {
+  //   // V_rms_softstart = 0;
+  //   compare_soft_curr -= 0.66;
+  //   if (compare_soft_curr < 0)
+  //     compare_soft_curr = 0;
+  //   EPwm5Regs.CMPA.half.CMPA = (Uint16)compare_soft_curr;
+  //   EPwm6Regs.CMPA.half.CMPA = (Uint16)compare_soft_curr;
+  // }
 
   // if (flag_voltage != prev_flag_voltage) {
   if (flag_voltage == 1) {
