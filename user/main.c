@@ -256,8 +256,8 @@ __interrupt void cpu_timer2_isr(void) {
   if (flag_voltage == 1 && flag == 1) {
     PID_Calc(&VoltageLoop, V_rms_ref - 0.2, V_rms);
     output = VoltageLoop.output;
-    if (output > 1 * 1.414)
-      output = 1 * 1.414;
+    if (output > 2 * 1.414)
+      output = 2 * 1.414;
     if (output < -2 * 1.414)
       output = -2 * 1.414;
 
