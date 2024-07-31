@@ -150,20 +150,21 @@ int main() {
     // GpioDataRegs.GPATOGGLE.bit.GPIO0 = 1;
     OLED_Update();
     // Test
-    EPwm5Regs.CMPA.half.CMPA = compare;
-    EPwm6Regs.CMPA.half.CMPA = compare;
+    // EPwm5Regs.CMPA.half.CMPA = compare;
+    // EPwm6Regs.CMPA.half.CMPA = compare;
 
     if (KEY_Read() != 0) {
       if (KEY_Read() == 1) {
         flag = 1 - flag;
+        flag_voltage = 1 - flag_voltage;
         while (KEY_Read() == 1)
           ;
       }
-      if (KEY_Read() == 2) {
-        flag_voltage = 1 - flag_voltage;
-        while (KEY_Read() == 2)
-          ;
-      }
+      // if (KEY_Read() == 2) {
+      //   flag_voltage = 1 - flag_voltage;
+      //   while (KEY_Read() == 2)
+      //     ;
+      // }
       if (KEY_Read() == 4) {
         V_rms_ref += 0.5;
         if (V_rms_ref > 35)
