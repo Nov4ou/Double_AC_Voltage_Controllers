@@ -40,6 +40,7 @@ float Kp_set = 1;
 extern float grid_voltage;
 extern float grid_inverter_current;
 extern float grid_inverter_voltage;
+extern float grid_current;
 float V_rms = 0;
 float V_rms_ref = 5;
 float output = 0;
@@ -264,7 +265,7 @@ __interrupt void cpu_timer2_isr(void) {
     /********************* Voltage Loop ************************/
     PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
     output = VoltageLoop.output;
-    PID_Calc(&CurrentLoop, output * fabs(V_mod), fabs(grid_inverter_current));
+    PID_Calc(&CurrentLoop, output * fabs(V_mod), fabs(grid_current));
     curr_loop_out = CurrentLoop.output / 40;
     compare = (Uint32)(curr_loop_out * MAX_CMPA);
     EPwm5Regs.CMPA.half.CMPA = compare;
