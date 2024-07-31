@@ -29,12 +29,13 @@ extern Uint16 RamfuncsLoadSize;
 // #define Ki 1063.14
 #define Ki 5000.0
 #define GRID_FREQ 50
-#define CURRENT_RMS 0.25
+#define CURRENT_RMS 0.3
 #define CUTOFF_FREQ 20
 
 _Bool flag = 0;
 _Bool prev_flag = 0;
 _Bool flag_voltage = 0;
+_Bool flag_current = 0;
 _Bool prev_flag_voltage = 0;
 float Kp_set = 1;
 
@@ -44,11 +45,12 @@ extern float grid_inverter_voltage;
 extern float grid_current;
 float V_rms = 0;
 float V_rms_softstart = 1;
-float V_rms_ref = 4;
-float V_rms_in = 6;
+float V_rms_ref = 7;
+float V_rms_in = 10;
 float I_rms_total = 0;
 float filtered_I_rms_total = 0;
 float output = 0;
+float lpf_out = 0;
 float dutycycle = 1000;
 float normalized_voltage1;
 float normalized_voltage2;
@@ -57,8 +59,11 @@ float ref_current;
 float curr_error;
 float curr_loop_out;
 float V_mod;
-float ratio = 1;
-float compare_soft = 0; // For soft shutdown
+float ratio = 0.5;
+float compare_soft_vol = 0;  // For soft shutdown
+float compare_soft_curr = 0; // For soft shutdown
+float curr_soft_start = 0;   // Current Loop soft start
+float vol_soft_shutdown = 1; // Voltage Loop soft shutdown
 
 Uint32 compare = 0;
 Uint32 counter = 0;
@@ -191,6 +196,12 @@ int main() {
         while (KEY_Read() == 2)
           ;
       }
+      if (KEY_Read() == 3) {
+        flag_voltage = 0;
+        flag_current = 1 - flag_current;
+        while (KEY_Read() == 3)
+          ;
+      }
       if (KEY_Read() == 4) {
         V_rms_ref += 0.5;
         if (V_rms_ref > 35)
@@ -292,10 +303,19 @@ __interrupt void cpu_timer2_isr(void) {
 
   if (flag_voltage == 0) {
     V_rms_softstart = 0;
-    compare_soft -= 0.66;
-    if (compare_soft < 0)
-      compare_soft = 0;
-    EPwm5Regs.CMPA.half.CMPA = (Uint16)compare_soft;
+    compare_soft_vol -= 0.66;
+    if (compare_soft_vol < 0)
+      compare_soft_vol = 0;
+    EPwm5Regs.CMPA.half.CMPA = (Uint16)compare_soft_vol;
+    EPwm6Regs.CMPA.half.CMPA = (Uint16)compare_soft_vol;
+  }
+  if (flag_current == 0) {
+    // V_rms_softstart = 0;
+    compare_soft_curr -= 0.66;
+    if (compare_soft_curr < 0)
+      compare_soft_curr = 0;
+    EPwm5Regs.CMPA.half.CMPA = (Uint16)compare_soft_curr;
+    EPwm6Regs.CMPA.half.CMPA = (Uint16)compare_soft_curr;
   }
 
   // if (flag_voltage != prev_flag_voltage) {
@@ -321,7 +341,7 @@ __interrupt void cpu_timer2_isr(void) {
       compare = 2200;
     if (compare <= 50)
       compare = 50;
-    compare_soft = compare;
+    compare_soft_vol = compare;
     EPwm5Regs.CMPA.half.CMPA = compare;
     EPwm6Regs.CMPA.half.CMPA = compare;
     prev_flag_voltage = flag_voltage;
@@ -334,6 +354,41 @@ __interrupt void cpu_timer2_isr(void) {
     // EPwm5Regs.CMPA.half.CMPA = compare;
     // EPwm6Regs.CMPA.half.CMPA = compare;
     /********************* Current Loop ************************/
+  }
+  if (flag_current == 1) {
+    curr_soft_start += 0.001;
+    if (curr_soft_start >= 1)
+      curr_soft_start = 1;
+    vol_soft_shutdown -= 0.001;
+    if (vol_soft_shutdown <= 0)
+      vol_soft_shutdown = 0;
+
+    lpf_out =
+        filtered_I_rms_total * CURRENT_RMS * 1.414 / ratio * curr_soft_start;
+
+    PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
+    output = VoltageLoop.output;
+    if (output > CURRENT_RMS * 1.414)
+      output = CURRENT_RMS * 1.414;
+    if (output < -1 * CURRENT_RMS * 1.414)
+      output = -1 * CURRENT_RMS * 1.414;
+
+    lpf_out += (output + CURRENT_RMS * 1.414) * vol_soft_shutdown;
+    PID_Calc(&CurrentLoop, lpf_out * fabs(V_mod), fabs(grid_current));
+    curr_loop_out = (CurrentLoop.output + V_rms_ref) / V_rms_in;
+    compare = (Uint32)(curr_loop_out * MAX_CMPA);
+    if (compare >= 2200)
+      compare = 2200;
+    if (compare <= 50)
+      compare = 50;
+    compare_soft_curr = compare;
+    EPwm5Regs.CMPA.half.CMPA = compare;
+    EPwm6Regs.CMPA.half.CMPA = compare;
+    prev_flag_voltage = flag_voltage;
+  }
+  if (flag_current == 0) {
+    curr_soft_start = 0;
+    vol_soft_shutdown = 1;
   }
 
   // }
@@ -397,6 +452,15 @@ void OLED_Update() {
       OLED_ShowString(83, 2, " ON ", 16);
     } else {
       OLED_ShowString(83, 2, " OFF", 16);
+    }
+
+    if (flag_current == 1) {
+      OLED_ShowString(0, 2, "Curr Loop: ", 16);
+      if (flag_current == 1) {
+        OLED_ShowString(83, 2, " ON ", 16);
+      } else {
+        OLED_ShowString(83, 2, " OFF", 16);
+      }
     }
 
     // OLED_ShowString(0, 4, "K_RLC: ", 8);
