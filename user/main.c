@@ -29,7 +29,7 @@ extern Uint16 RamfuncsLoadSize;
 // #define Ki 1063.14
 #define Ki 5000.0
 #define GRID_FREQ 50
-#define CURRENT_RMS 1.5
+#define CURRENT_RMS 0.25
 #define CUTOFF_FREQ 20
 
 _Bool flag = 0;
@@ -47,6 +47,7 @@ float V_rms_softstart = 1;
 float V_rms_ref = 4;
 float V_rms_in = 6;
 float I_rms_total = 0;
+float filtered_I_rms_total = 0;
 float output = 0;
 float dutycycle = 1000;
 float normalized_voltage1;
@@ -272,11 +273,12 @@ __interrupt void cpu_timer1_isr(void) {
   SPLL_1ph_SOGI_F_coeff_update(((float)(1.0 / ISR_FREQUENCY)),
                                (float)(2 * PI * GRID_FREQ), &spll1);
 
-  normalized_voltage3 = grid_inverter_current / 4; // Change after
+  normalized_voltage3 = grid_inverter_current / 4;
   sineanalyzer_diff2.Vin = normalized_voltage3;
   SINEANALYZER_DIFF_F_FUNC(&sineanalyzer_diff2);
   if (abs(sineanalyzer_diff2.SigFreq - 50) < 5)
     I_rms_total = sineanalyzer_diff2.Vrms * 4;
+  filtered_I_rms_total = applyLowPassFilter(&filter, I_rms_total);
 
   V_mod = sin(spll1.theta[0]);
   EPwm2Regs.CMPA.half.CMPA = (Uint16)(fabs(V_mod) * MAX_CMPA);
@@ -306,12 +308,12 @@ __interrupt void cpu_timer2_isr(void) {
     /********************* Voltage Loop ************************/
     PID_Calc(&VoltageLoop, V_rms_softstart, V_rms);
     output = VoltageLoop.output;
-    if (output > 2 * 1.414)
-      output = 2 * 1.414;
-    if (output < -2 * 1.414)
-      output = -2 * 1.414;
+    if (output > CURRENT_RMS * 1.414)
+      output = CURRENT_RMS * 1.414;
+    if (output < -1 * CURRENT_RMS * 1.414)
+      output = -1 * CURRENT_RMS * 1.414;
 
-    PID_Calc(&CurrentLoop, (output + 2 * 1.414) * fabs(V_mod),
+    PID_Calc(&CurrentLoop, (output + CURRENT_RMS * 1.414) * fabs(V_mod),
              fabs(grid_current));
     curr_loop_out = (CurrentLoop.output + V_rms_softstart) / V_rms_in;
     compare = (Uint32)(curr_loop_out * MAX_CMPA);
