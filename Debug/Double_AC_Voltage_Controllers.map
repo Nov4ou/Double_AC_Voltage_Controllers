@@ -1,7 +1,7 @@
 ******************************************************************************
              TMS320C2000 Linker Unix v22.6.1                   
 ******************************************************************************
->> Linked Wed Jul 31 22:55:24 2024
+>> Linked Thu Aug  1 02:42:29 2024
 
 OUTPUT FILE NAME:   <Double_AC_Voltage_Controllers.out>
 ENTRY POINT SYMBOL: "_c_int00"  address: 003f568d
@@ -12,14 +12,14 @@ MEMORY CONFIGURATION
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
 PAGE 0:
-  RAML0                 00008000   00000800  000001a5  0000065b  RWIX
+  RAML0                 00008000   00000800  000001af  00000651  RWIX
   RAML1                 00008800   00000400  00000000  00000400  RWIX
   OTP                   003d7800   00000400  00000000  00000400  RWIX
   FLASHH                003d8000   00004000  00000000  00004000  RWIX
   FLASHG                003dc000   00004000  00000000  00004000  RWIX
   FLASHF                003e0000   00004000  00000000  00004000  RWIX
   FLASHE                003e4000   00004000  00000000  00004000  RWIX
-  FLASHD                003e8000   00004000  000001a5  00003e5b  RWIX
+  FLASHD                003e8000   00004000  000001af  00003e51  RWIX
   FLASHC                003ec000   00004000  00000000  00004000  RWIX
   FLASHA                003f4000   00003f80  000022a2  00001cde  RWIX
   CSM_RSVD              003f7f80   00000076  00000000  00000076  RWIX
@@ -118,10 +118,10 @@ section   page    origin      length       input sections
 
 .pinit     0    003f4000    00000000     UNINITIALIZED
 
-ramfuncs   0    003e8000    000001a5     RUN ADDR = 00008000
-                  003e8000    00000186     main.obj (ramfuncs:retain)
-                  003e8186    0000001b     F2806x_SysCtrl.obj (ramfuncs)
-                  003e81a1    00000004     F2806x_usDelay.obj (ramfuncs)
+ramfuncs   0    003e8000    000001af     RUN ADDR = 00008000
+                  003e8000    00000190     main.obj (ramfuncs:retain)
+                  003e8190    0000001b     F2806x_SysCtrl.obj (ramfuncs)
+                  003e81ab    00000004     F2806x_usDelay.obj (ramfuncs)
 
 .text      0    003f4000    000018d3     
                   003f4000    00000426     main.obj (.text)
@@ -464,9 +464,9 @@ MODULE SUMMARY
        Total:                          2438   256                3574              
                                                                                    
     ./user/
-       main.obj                        1842   123                208               
+       main.obj                        1862   123                208               
     +--+-------------------------------+------+------------------+--------------------+
-       Total:                          1842   123                208               
+       Total:                          1862   123                208               
                                                                                    
     /Applications/ti/solar/v1.2/float/lib/Solar_Lib_Float.lib
        SPLL_1ph_SOGI_F.obj             369    0                  0                 
@@ -495,7 +495,7 @@ MODULE SUMMARY
                                                                                    
        Stack:                          0      0                  768               
     +--+-------------------------------+------+------------------+--------------------+
-       Grand Total:                    7199   2509               5631              
+       Grand Total:                    7219   2509               5631              
 
 
 GLOBAL DATA SYMBOLS: SORTED BY DATA PAGE
@@ -730,7 +730,7 @@ page  address   name
 0     003f4688  _DINTCH4_ISR                    
 0     003f4692  _DINTCH5_ISR                    
 0     003f469c  _DINTCH6_ISR                    
-0     000081a1  _DSP28x_usDelay                 
+0     000081ab  _DSP28x_usDelay                 
 1     00000880  _DevEmuRegs                     
 0     003f4ebb  _DisableDog                     
 1     00001000  _DmaRegs                        
@@ -824,7 +824,7 @@ page  address   name
 0     003f5310  _InitEPwm8Gpio                  
 0     003f527f  _InitEPwmGpio                   
 0     003f5320  _InitEPwmSyncGpio               
-0     00008186  _InitFlash                      
+0     00008190  _InitFlash                      
 0     003f4f45  _InitPeripheralClocks           
 0     003f57ca  _InitPieCtrl                    
 0     003f5819  _InitPieVectTable               
@@ -870,8 +870,8 @@ page  address   name
 1     00000d00  _PieVectTable                   
 0     003f60ec  _PieVectTableInit               
 0     003f4444  _RTOSINT_ISR                    
-0     003e81a5  _RamfuncsLoadEnd                
-abs   000001a5  _RamfuncsLoadSize               
+0     003e81af  _RamfuncsLoadEnd                
+abs   000001af  _RamfuncsLoadSize               
 0     003e8000  _RamfuncsLoadStart              
 0     00008000  _RamfuncsRunStart               
 0     003f46ba  _SCIRXINTA_ISR                  
@@ -1021,10 +1021,10 @@ page  address   name
 0     00008000  _RamfuncsRunStart               
 0     00008000  _cpu_timer1_isr                 
 0     000080a3  _cpu_timer2_isr                 
-0     00008186  _InitFlash                      
-0     000081a1  _DSP28x_usDelay                 
+0     00008190  _InitFlash                      
+0     000081ab  _DSP28x_usDelay                 
 0     003e8000  _RamfuncsLoadStart              
-0     003e81a5  _RamfuncsLoadEnd                
+0     003e81af  _RamfuncsLoadEnd                
 0     003f4000  .text                           
 0     003f4000  ___text__                       
 0     003f4000  _main                           
@@ -1343,7 +1343,7 @@ page  address   name
 1     0000a520  _errno                          
 1     003d7e80  _PartIdRegs                     
 1     003f7ff8  _CsmPwl                         
-abs   000001a5  _RamfuncsLoadSize               
+abs   000001af  _RamfuncsLoadSize               
 abs   00000300  __STACK_SIZE                    
 abs   ffffffff  ___TI_pprof_out_hndl            
 abs   ffffffff  ___TI_prof_data_size            

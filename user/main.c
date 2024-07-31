@@ -43,8 +43,8 @@ extern float grid_inverter_voltage;
 extern float grid_current;
 float V_rms = 0;
 float V_rms_softstart = 1;
-float V_rms_ref = 4;
-float V_rms_in = 6;
+float V_rms_ref = 7;
+float V_rms_in = 10;
 float output = 0;
 float dutycycle = 1000;
 float normalized_voltage1;
@@ -270,6 +270,7 @@ __interrupt void cpu_timer2_isr(void) {
     if (compare_soft < 0)
       compare_soft = 0;
     EPwm5Regs.CMPA.half.CMPA = (Uint16)compare_soft;
+    EPwm6Regs.CMPA.half.CMPA = (Uint16)compare_soft;
   }
 
   // if (flag_voltage != prev_flag_voltage) {
