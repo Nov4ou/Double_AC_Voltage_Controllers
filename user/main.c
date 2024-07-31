@@ -28,8 +28,8 @@ extern Uint16 RamfuncsLoadSize;
 #define ISR_FREQUENCY 20000
 #define GRID_FREQ 50
 
-_Bool flag = 1;
-_Bool prev_flag = 0;
+_Bool flag = 0;
+_Bool prev_flag = 1;
 _Bool flag_voltage = 0;
 
 extern float grid_voltage;
@@ -109,16 +109,16 @@ int main() {
   // EPWM7_Init(MAX_CMPA);
   // EPWM8_Init(MAX_CMPA);
   EPwm1Regs.TBCTL.bit.SWFSYNC = 1;
-  EPwm5Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
-  EPwm6Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
-  // Set actions for rectifier
-  EPwm5Regs.AQCTLA.bit.ZRO = AQ_NO_ACTION;
-  EPwm5Regs.AQCTLA.bit.CAU = AQ_CLEAR;
-  EPwm5Regs.AQCTLA.bit.CAD = AQ_SET;
-  // Set actions for rectifier
-  EPwm6Regs.AQCTLA.bit.ZRO = AQ_NO_ACTION;
-  EPwm6Regs.AQCTLA.bit.CAU = AQ_CLEAR;
-  EPwm6Regs.AQCTLA.bit.CAD = AQ_SET;
+  // EPwm5Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
+  // EPwm6Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
+  // // Set actions for rectifier
+  // EPwm5Regs.AQCTLA.bit.ZRO = AQ_NO_ACTION;
+  // EPwm5Regs.AQCTLA.bit.CAU = AQ_CLEAR;
+  // EPwm5Regs.AQCTLA.bit.CAD = AQ_SET;
+  // // Set actions for rectifier
+  // EPwm6Regs.AQCTLA.bit.ZRO = AQ_NO_ACTION;
+  // EPwm6Regs.AQCTLA.bit.CAU = AQ_CLEAR;
+  // EPwm6Regs.AQCTLA.bit.CAD = AQ_SET;
 
   KEY_Init();
   SPIB_Init();
@@ -134,6 +134,7 @@ int main() {
   EINT; // Enable Global interrupt INTM
   ERTM; // Enable Global realtime interrupt DBGM
   PieCtrlRegs.PIEIER1.bit.INTx7 = 1;
+  // compare = 0;
 
   while (1) {
     // GpioDataRegs.GPATOGGLE.bit.GPIO0 = 1;
