@@ -248,8 +248,8 @@ void EPWM5_Init(Uint16 tbprd) {
   EPwm5Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
 
   // Set Compare values
-  EPwm5Regs.CMPA.half.CMPA = tbprd / 2; // Set compare A value
-  EPwm5Regs.CMPB = tbprd / 2;           // Set Compare B value
+  // EPwm5Regs.CMPA.half.CMPA = tbprd / 2; // Set compare A value
+  // EPwm5Regs.CMPB = tbprd / 2;           // Set Compare B value
 
   // // Set actions
   // EPwm5Regs.AQCTLA.bit.ZRO = AQ_SET;   // Set PWM5A on Zero
@@ -258,11 +258,11 @@ void EPWM5_Init(Uint16 tbprd) {
   // EPwm5Regs.AQCTLB.bit.CBU = AQ_CLEAR; // Clear PWM5B on event B, up count
 
   // Active Low PWMs - Setup Deadband
-  EPwm5Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
-  EPwm5Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
-  EPwm5Regs.DBCTL.bit.IN_MODE = DBA_ALL;
-  EPwm5Regs.DBRED = 5;
-  EPwm5Regs.DBFED = 5;
+  // EPwm5Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
+  // EPwm5Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
+  // EPwm5Regs.DBCTL.bit.IN_MODE = DBA_ALL;
+  // EPwm5Regs.DBRED = 5;
+  // EPwm5Regs.DBFED = 5;
 
 
   EALLOW;
@@ -300,21 +300,21 @@ void EPWM6_Init(Uint16 tbprd) {
   EPwm6Regs.CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
 
   // Set Compare values
-  EPwm6Regs.CMPA.half.CMPA = tbprd / 2; // Set compare A value
-  EPwm6Regs.CMPB = tbprd / 2;           // Set Compare B value
+  // EPwm6Regs.CMPA.half.CMPA = tbprd / 2; // Set compare A value
+  // EPwm6Regs.CMPB = tbprd / 2;           // Set Compare B value
 
-  // Set actions
-  EPwm6Regs.AQCTLA.bit.ZRO = AQ_SET;   // Set PWM6A on Zero
-  EPwm6Regs.AQCTLA.bit.CAU = AQ_CLEAR; // Clear PWM6A on event A, up count
-  EPwm6Regs.AQCTLB.bit.ZRO = AQ_SET;   // Set PWM6B on Zero
-  EPwm6Regs.AQCTLB.bit.CBU = AQ_CLEAR; // Clear PWM6B on event B, up count
+  // // Set actions
+  // EPwm6Regs.AQCTLA.bit.ZRO = AQ_SET;   // Set PWM6A on Zero
+  // EPwm6Regs.AQCTLA.bit.CAU = AQ_CLEAR; // Clear PWM6A on event A, up count
+  // EPwm6Regs.AQCTLB.bit.ZRO = AQ_SET;   // Set PWM6B on Zero
+  // EPwm6Regs.AQCTLB.bit.CBU = AQ_CLEAR; // Clear PWM6B on event B, up count
 
-  // Active Low PWMs - Setup Deadband
-  EPwm6Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
-  EPwm6Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
-  EPwm6Regs.DBCTL.bit.IN_MODE = DBA_ALL;
-  EPwm6Regs.DBRED = 5;
-  EPwm6Regs.DBFED = 5;
+  // // Active Low PWMs - Setup Deadband
+  // EPwm6Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
+  // EPwm6Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
+  // EPwm6Regs.DBCTL.bit.IN_MODE = DBA_ALL;
+  // EPwm6Regs.DBRED = 5;
+  // EPwm6Regs.DBFED = 5;
 
 
 

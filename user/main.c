@@ -42,6 +42,7 @@ extern float grid_inverter_current;
 extern float grid_inverter_voltage;
 extern float grid_current;
 float V_rms = 0;
+float V_rms_softstart = 1;
 float V_rms_ref = 4;
 float V_rms_in = 6;
 float output = 0;
@@ -55,7 +56,7 @@ float V_mod;
 float ratio = 1;
 float compare_soft = 0; // For soft shutdown
 
-Uint32 compare = 1700;
+Uint32 compare = 0;
 Uint32 counter = 0;
 Uint8 str[10];
 
@@ -157,8 +158,8 @@ int main() {
     // GpioDataRegs.GPATOGGLE.bit.GPIO0 = 1;
     OLED_Update();
     // Test
-    EPwm5Regs.CMPA.half.CMPA = compare;
-    EPwm6Regs.CMPA.half.CMPA = compare;
+    // EPwm5Regs.CMPA.half.CMPA = compare;
+    // EPwm6Regs.CMPA.half.CMPA = compare;
 
     if (KEY_Read() != 0) {
       if (KEY_Read() == 1) {
@@ -219,8 +220,8 @@ int main() {
         EPwm6Regs.AQCTLA.bit.CAU = AQ_CLEAR;
         EPwm6Regs.AQCTLA.bit.CAD = AQ_SET;
 
-        EPwm5Regs.CMPA.half.CMPA = compare;
-        EPwm6Regs.CMPA.half.CMPA = compare;
+        // EPwm5Regs.CMPA.half.CMPA = compare;
+        // EPwm6Regs.CMPA.half.CMPA = compare;
       }
       prev_flag = flag;
     }
@@ -263,9 +264,9 @@ __interrupt void cpu_timer2_isr(void) {
   // EPwm5Regs.CMPA.half.CMPA = compare;
   // EPwm6Regs.CMPA.half.CMPA = compare;
 
-  if (flag_voltage == 0 && prev_flag_voltage == 1) {
-    compare_soft = compare;
-    compare_soft -= 0.01;
+  if (flag_voltage == 0) {
+    V_rms_softstart = 0;
+    compare_soft -= 0.66;
     if (compare_soft < 0)
       compare_soft = 0;
     EPwm5Regs.CMPA.half.CMPA = (Uint16)compare_soft;
@@ -273,8 +274,13 @@ __interrupt void cpu_timer2_isr(void) {
 
   // if (flag_voltage != prev_flag_voltage) {
   if (flag_voltage == 1) {
+    // Soft Start
+    V_rms_softstart += 0.001;
+    if (V_rms_softstart >= V_rms_ref)
+      V_rms_softstart = V_rms_ref;
+    
     /********************* Voltage Loop ************************/
-    PID_Calc(&VoltageLoop, V_rms_ref - 0.2, V_rms);
+    PID_Calc(&VoltageLoop, V_rms_softstart, V_rms);
     output = VoltageLoop.output;
     if (output > 2 * 1.414)
       output = 2 * 1.414;
@@ -283,13 +289,13 @@ __interrupt void cpu_timer2_isr(void) {
 
     PID_Calc(&CurrentLoop, (output + 2 * 1.414) * fabs(V_mod),
              fabs(grid_current));
-    curr_loop_out = (CurrentLoop.output + V_rms_ref) / V_rms_in;
+    curr_loop_out = (CurrentLoop.output + V_rms_softstart) / V_rms_in;
     compare = (Uint32)(curr_loop_out * MAX_CMPA);
     if (compare >= 2200)
       compare = 2200;
     if (compare <= 50)
       compare = 50;
-
+    compare_soft = compare;
     EPwm5Regs.CMPA.half.CMPA = compare;
     EPwm6Regs.CMPA.half.CMPA = compare;
     prev_flag_voltage = flag_voltage;
@@ -303,7 +309,7 @@ __interrupt void cpu_timer2_isr(void) {
     // EPwm6Regs.CMPA.half.CMPA = compare;
     /********************* Current Loop ************************/
   }
-  
+
   // }
 }
 
