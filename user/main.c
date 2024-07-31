@@ -33,11 +33,19 @@ _Bool prev_flag = 1;
 _Bool flag_voltage = 0;
 
 extern float grid_voltage;
+extern float grid_inverter_current;
+extern float grid_inverter_voltage;
+extern float grid_current;
 float V_rms = 0;
-float V_rms_ref = 5;
+float V_rms_ref = 7;
+float V_rms_in = 10;
 float output = 0;
 float dutycycle = 1000;
-float normalized_voltage;
+float normalized_voltage1;
+float normalized_voltage2;
+float ref_current;
+float curr_error;
+float curr_loop_out;
 float V_mod;
 Uint32 compare = 1700;
 Uint32 counter = 0;
@@ -49,7 +57,7 @@ typedef struct {
   float integral, maxIntegral;
   float output, maxOutput;
 } PID;
-PID VoltageLoop;
+PID VoltageLoop, CurrentLoop;
 
 SINEANALYZER_DIFF_F sineanalyzer_diff1;
 SPLL_1ph_SOGI_F spll1;
@@ -99,7 +107,9 @@ int main() {
                                (float)(2 * PI * GRID_FREQ), &spll1);
   spll1.lpf_coeff.B0_lf = (float32)((2 * Kp + Ki / ISR_FREQUENCY) / 2);
   spll1.lpf_coeff.B1_lf = (float32)(-(2 * Kp - Ki / ISR_FREQUENCY) / 2);
-  PID_Init(&VoltageLoop, 0.4, 0.1, 0, 50, 50);
+  PID_Init(&VoltageLoop, 0.04, 0.02, 0, 50, 50);
+  // PID_Init(&CurrentLoop, 1, 0.001, 0, 50, 50);
+  PID_Init(&CurrentLoop, 1, 0.000, 0, 50, 50);
 
   LED_Init();
   EPWM2_Init(MAX_CMPA);
@@ -224,27 +234,41 @@ void LED_Init(void) {
 }
 
 __interrupt void cpu_timer1_isr(void) {
-  normalized_voltage = grid_voltage / (V_rms_ref * 1.414);
-  sineanalyzer_diff1.Vin = normalized_voltage;
+  normalized_voltage1 = grid_voltage / (V_rms_ref * 1.414);
+  sineanalyzer_diff1.Vin = normalized_voltage1;
   SINEANALYZER_DIFF_F_FUNC(&sineanalyzer_diff1);
   if (abs(sineanalyzer_diff1.SigFreq - 50) < 5)
     V_rms = sineanalyzer_diff1.Vrms * (V_rms_ref * 1.414);
 
-  spll1.u[0] = normalized_voltage;
+  normalized_voltage2 = grid_inverter_voltage / 15;
+  spll1.u[0] = normalized_voltage2;
   SPLL_1ph_SOGI_F_FUNC(&spll1);
   SPLL_1ph_SOGI_F_coeff_update(((float)(1.0 / ISR_FREQUENCY)),
                                (float)(2 * PI * GRID_FREQ), &spll1);
+
+  V_mod = sin(spll1.theta[0]);
+  EPwm2Regs.CMPA.half.CMPA = (Uint16)(fabs(V_mod) * MAX_CMPA);
 }
 
 __interrupt void cpu_timer2_isr(void) {
   GpioDataRegs.GPATOGGLE.bit.GPIO0 = 1;
-  if (flag_voltage == 1) {
-    PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
-    output = 20 + VoltageLoop.output;
-    dutycycle = output / 40;
-    compare = (Uint32)(dutycycle * MAX_CMPA);
-    if (compare >= 2230)
-      compare = 2230;
+  if (flag_voltage == 1 && flag == 1) {
+    PID_Calc(&VoltageLoop, V_rms_ref - 0.2, V_rms);
+    output = VoltageLoop.output;
+    if (output > 2 * 1.414)
+      output = 2 * 1.414;
+    if (output < -2 * 1.414)
+      output = -2 * 1.414;
+
+    PID_Calc(&CurrentLoop, (output + 2 * 1.414) * fabs(V_mod),
+             fabs(grid_current));
+    curr_loop_out = (CurrentLoop.output + V_rms_ref) / V_rms_in;
+    compare = (Uint32)(curr_loop_out * MAX_CMPA);
+    if (compare >= 2200)
+      compare = 2200;
+    if (compare <= 50)
+      compare = 50;
+
     EPwm5Regs.CMPA.half.CMPA = compare;
     EPwm6Regs.CMPA.half.CMPA = compare;
   }
@@ -286,14 +310,14 @@ void PID_Calc(PID *pid, float reference, float feedback) {
 void OLED_Update() {
   counter++;
   if (counter == 5000) {
-    OLED_ShowString(0, 0, "State: ", 16);
+    OLED_ShowString(0, 0, "Slave: ", 16);
     if (flag == 1) {
       OLED_ShowString(83, 0, " ON ", 16);
     } else {
       OLED_ShowString(83, 0, " OFF", 16);
     }
 
-    OLED_ShowString(0, 2, "Vol Loop: ", 16);
+    OLED_ShowString(0, 2, "Dual Loop: ", 16);
     if (flag_voltage == 1) {
       OLED_ShowString(83, 2, " ON ", 16);
     } else {
