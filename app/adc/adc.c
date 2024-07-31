@@ -48,7 +48,7 @@ float kalman_filter(KalmanFilter *kf, float z);
 
 void ADC_Init() {
 
-  // kalmanFilter_Init(&filtered_vol3);
+  kalmanFilter_Init(&filtered_vol3);
   //
   // Configure ADC
   //
@@ -144,30 +144,29 @@ __interrupt void adc_isr(void) {
 
   // Vol1 = Voltage1[ConversionCount] * 3.3 / 4095;
 
-  // filtered_current = kalman_filter(&filtered_vol3,
+  // filtered_current = kalman_filter(&filtered_vol3, Voltage4[ConversionCount]);
   // Voltage4[ConversionCount]);
 
   // 20m ohm
-  grid_inverter_current = (Voltage4[ConversionCount] * 0.0016 - 2.9939) * 2;
+  grid_inverter_current = Voltage4[ConversionCount] * 0.0029 - 5.3358;
   current_graph[curr_index] = grid_inverter_current;
   curr_index = (curr_index + 1) % CURR_GRAPH_INDEX;
 
-  grid_inverter_voltage = 0.0333 * Voltage1[ConversionCount] - 61.893;
+  grid_inverter_voltage = 0.0426 * Voltage1[ConversionCount] - 79.319;
 
   // grid_inverter_voltage = (Vol1 - 1.502) * 41.61;
   // rectifier_volt_graph[rectifier_volt_index++] = rectifier_voltage;
   // if (rectifier_volt_index >= GRID_V_INDEX)
   //   rectifier_volt_index = 0;
 
-  grid_voltage = Voltage2[ConversionCount] * 0.0433 - 80.532;
+  grid_voltage = Voltage2[ConversionCount] * 0.0433 - 80.636;
   voltage_graph[vol_index] = grid_voltage;
   vol_index = (vol_index + 1) % VOL_GRAPH_INDEX;
   // grid_vol_graph[gridvindex++] = grid_voltage;
   // if (gridvindex > GRID_V_INDEX)
   //   gridvindex = 0;
 
-  // 10m ohm
-  // grid_current = (Voltage3[ConversionCount] * 0.0016 - 2.9816) * 2;
+  grid_current = Voltage3[ConversionCount] * 0.0028 - 5.2619;
   // grid_current_graph[grid_curr_index++] = grid_current;
   // if (grid_curr_index > GRID_CURRENT_GRAPH)
   //   grid_curr_index = 0;
