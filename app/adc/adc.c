@@ -144,11 +144,11 @@ __interrupt void adc_isr(void) {
 
   // Vol1 = Voltage1[ConversionCount] * 3.3 / 4095;
 
-  // filtered_current = kalman_filter(&filtered_vol3,
-  // Voltage4[ConversionCount]);
+  filtered_current = kalman_filter(&filtered_vol3,
+  Voltage4[ConversionCount]);
 
   // 20m ohm
-  grid_inverter_current = (Voltage4[ConversionCount] * 0.0016 - 2.9939) * 2;
+  grid_inverter_current = Voltage4[ConversionCount] * 0.0031 - 5.7743;
 
   grid_inverter_voltage = 0.0335 * Voltage1[ConversionCount] - 61.954;
 

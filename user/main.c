@@ -30,6 +30,7 @@ extern Uint16 RamfuncsLoadSize;
 #define Ki 5000.0
 #define GRID_FREQ 50
 #define CURRENT_RMS 1.5
+#define CUTOFF_FREQ 20
 
 _Bool flag = 0;
 _Bool prev_flag = 0;
@@ -45,10 +46,12 @@ float V_rms = 0;
 float V_rms_softstart = 1;
 float V_rms_ref = 4;
 float V_rms_in = 6;
+float I_rms_total = 0;
 float output = 0;
 float dutycycle = 1000;
 float normalized_voltage1;
 float normalized_voltage2;
+float normalized_voltage3;
 float ref_current;
 float curr_error;
 float curr_loop_out;
@@ -68,7 +71,14 @@ typedef struct {
 } PID;
 PID VoltageLoop, CurrentLoop;
 
+typedef struct {
+  float alpha;
+  float y_prev;
+} LowPassFilter;
+LowPassFilter filter;
+
 SINEANALYZER_DIFF_F sineanalyzer_diff1;
+SINEANALYZER_DIFF_F sineanalyzer_diff2;
 SPLL_1ph_SOGI_F spll1;
 
 void LED_Init(void);
@@ -76,6 +86,9 @@ __interrupt void cpu_timer1_isr(void);
 __interrupt void cpu_timer2_isr(void);
 void PID_Init(PID *pid, float p, float i, float d, float maxI, float maxOut);
 void PID_Calc(PID *pid, float reference, float feedback);
+void initLowPassFilter(LowPassFilter *filter, float cutoff_freq,
+                       float sample_freq);
+float applyLowPassFilter(LowPassFilter *filter, float x);
 void OLED_Update();
 void ftoa(float f, int precision);
 void itoa(int num, Uint8 *str);
@@ -111,6 +124,10 @@ int main() {
   sineanalyzer_diff1.SampleFreq = ISR_FREQUENCY;
   sineanalyzer_diff1.nsamplesMin = 363 / 2;
   sineanalyzer_diff1.nsamplesMax = 444 / 2;
+  SINEANALYZER_DIFF_F_init(&sineanalyzer_diff2);
+  sineanalyzer_diff2.SampleFreq = ISR_FREQUENCY;
+  sineanalyzer_diff2.nsamplesMin = 363 / 2;
+  sineanalyzer_diff2.nsamplesMax = 444 / 2;
   SPLL_1ph_SOGI_F_init(GRID_FREQ, ((float)(1.0 / ISR_FREQUENCY)), &spll1);
   SPLL_1ph_SOGI_F_coeff_update(((float)(1.0 / ISR_FREQUENCY)),
                                (float)(2 * PI * GRID_FREQ), &spll1);
@@ -119,6 +136,7 @@ int main() {
   PID_Init(&VoltageLoop, 0.04, 0.02, 0, 50, 50);
   // PID_Init(&CurrentLoop, 1, 0.001, 0, 50, 50);
   PID_Init(&CurrentLoop, 1, 0.000, 0, 50, 50);
+  initLowPassFilter(&filter, CUTOFF_FREQ, ISR_FREQUENCY);
 
   LED_Init();
   EPWM2_Init(MAX_CMPA);
@@ -254,6 +272,12 @@ __interrupt void cpu_timer1_isr(void) {
   SPLL_1ph_SOGI_F_coeff_update(((float)(1.0 / ISR_FREQUENCY)),
                                (float)(2 * PI * GRID_FREQ), &spll1);
 
+  normalized_voltage3 = grid_inverter_current / 6;
+  sineanalyzer_diff2.Vin = normalized_voltage3;
+  SINEANALYZER_DIFF_F_FUNC(&sineanalyzer_diff2);
+  if (abs(sineanalyzer_diff2.SigFreq - 50) < 5)
+    I_rms_total = sineanalyzer_diff1.Vrms * 6;
+
   V_mod = sin(spll1.theta[0]);
   EPwm2Regs.CMPA.half.CMPA = (Uint16)(fabs(V_mod) * MAX_CMPA);
 }
@@ -278,7 +302,7 @@ __interrupt void cpu_timer2_isr(void) {
     V_rms_softstart += 0.001;
     if (V_rms_softstart >= V_rms_ref)
       V_rms_softstart = V_rms_ref;
-    
+
     /********************* Voltage Loop ************************/
     PID_Calc(&VoltageLoop, V_rms_softstart, V_rms);
     output = VoltageLoop.output;
@@ -340,6 +364,20 @@ void PID_Calc(PID *pid, float reference, float feedback) {
     pid->output = pid->maxOutput;
   else if (pid->output < -pid->maxOutput)
     pid->output = -pid->maxOutput;
+}
+
+void initLowPassFilter(LowPassFilter *filter, float cutoff_freq,
+                       float sample_freq) {
+  float tau = 1.0 / (2 * PI * cutoff_freq);
+  float dt = 1.0 / sample_freq;
+  filter->alpha = dt / (tau + dt);
+  filter->y_prev = 0.0;
+}
+
+float applyLowPassFilter(LowPassFilter *filter, float x) {
+  float y = filter->alpha * x + (1.0 - filter->alpha) * filter->y_prev;
+  filter->y_prev = y;
+  return y;
 }
 
 void OLED_Update() {
