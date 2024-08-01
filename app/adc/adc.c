@@ -14,6 +14,7 @@ Uint16 Voltage1[10];
 Uint16 Voltage2[10];
 Uint16 Voltage3[10];
 Uint16 Voltage4[10];
+Uint16 Voltage5[10];
 
 Uint8 index = 0;
 Uint16 grid_curr_index;
@@ -24,6 +25,7 @@ float grid_voltage;
 float grid_current;
 float grid_inverter_current;
 float grid_inverter_voltage;
+float grid_inverter_current2;
 
 #define VOL_GRAPH_INDEX 300
 float voltage_graph[VOL_GRAPH_INDEX];
@@ -75,6 +77,8 @@ void ADC_Init() {
   AdcRegs.ADCSOC2CTL.bit.CHSEL = 0xA; // set SOC1 channel select to ADCINB2
   AdcRegs.ADCSOC3CTL.bit.CHSEL =
       0xC; // set SOC1 channel select to ADCINB4   Grid Inverter Output Current
+  AdcRegs.ADCSOC4CTL.bit.CHSEL = 0xE; // set SOC1 channel select to ADCINB6 Grid
+                                      // Inverter Output Current 2
   //
   // set SOC0 start trigger on EPWM1A, due to round-robin SOC0 converts
   // first then SOC1
@@ -98,6 +102,12 @@ void ADC_Init() {
   // first then SOC1
   //
   AdcRegs.ADCSOC3CTL.bit.TRIGSEL = 5;
+
+  //
+  // set SOC4 start trigger on EPWM1A, due to round-robin SOC0 converts
+  // first then SOC1
+  //
+  AdcRegs.ADCSOC4CTL.bit.TRIGSEL = 5;
 
   //
   // set SOC0 S/H Window to 7 ADC Clock Cycles, (6 ACQPS plus 1)
@@ -141,11 +151,12 @@ __interrupt void adc_isr(void) {
   Voltage2[ConversionCount] = AdcResult.ADCRESULT1;
   Voltage3[ConversionCount] = AdcResult.ADCRESULT2;
   Voltage4[ConversionCount] = AdcResult.ADCRESULT3;
+  Voltage5[ConversionCount] = AdcResult.ADCRESULT4;
 
   // Vol1 = Voltage1[ConversionCount] * 3.3 / 4095;
+  grid_inverter_current2 = (Voltage5[ConversionCount] * 0.003 - 5.6274);
 
-  filtered_current = kalman_filter(&filtered_vol3,
-  Voltage4[ConversionCount]);
+  filtered_current = kalman_filter(&filtered_vol3, Voltage4[ConversionCount]);
 
   // 20m ohm
   grid_inverter_current = Voltage4[ConversionCount] * 0.0031 - 5.7743;

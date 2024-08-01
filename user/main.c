@@ -29,7 +29,7 @@ extern Uint16 RamfuncsLoadSize;
 // #define Ki 1063.14
 #define Ki 5000.0
 #define GRID_FREQ 50
-#define CURRENT_RMS 0.64
+#define CURRENT_RMS 0.3
 #define CUTOFF_FREQ 20
 
 _Bool flag = 0;
@@ -43,12 +43,13 @@ _Bool nf = 0;
 float Kp_set = 1;
 extern float grid_voltage;
 extern float grid_inverter_current;
+extern float grid_inverter_current2;
 extern float grid_inverter_voltage;
 extern float grid_current;
 float V_rms = 0;
 float V_rms_softstart = 1;
-float V_rms_ref = 7;
-float V_rms_in = 10;
+float V_rms_ref = 4;
+float V_rms_in = 6;
 float I_rms_total = 0;
 float filtered_I_rms_total = 0;
 float output = 0;
@@ -60,6 +61,7 @@ float normalized_voltage3;
 float ref_current;
 float curr_error;
 float curr_loop_out;
+float actual_curr = 0;
 float V_mod;
 float ratio = 0.5;
 float compare_soft_vol = 0;  // For soft shutdown
@@ -293,7 +295,7 @@ __interrupt void cpu_timer1_isr(void) {
     I_rms_total = sineanalyzer_diff2.Vrms * 4;
   filtered_I_rms_total = applyLowPassFilter(&filter, I_rms_total);
 
-  // V_mod = sin(spll1.theta[0]);
+  V_mod = sin(spll1.theta[0]);
   if (V_mod > 0.1)
     pf = 1;
   else
@@ -303,7 +305,7 @@ __interrupt void cpu_timer1_isr(void) {
   else
     nf = 0;
 
-  EPwm2Regs.CMPA.half.CMPA = (Uint16)(fabs(V_mod) * MAX_CMPA);
+  EPwm2Regs.CMPA.half.CMPA = (Uint16)((V_mod + 1) * MAX_CMPA / 2);
 }
 
 __interrupt void cpu_timer2_isr(void) {
@@ -334,22 +336,27 @@ __interrupt void cpu_timer2_isr(void) {
       V_rms_softstart = V_rms_ref;
 
     /********************* Voltage Loop ************************/
-    PID_Calc(&VoltageLoop, V_rms_softstart, V_rms);
-    output = VoltageLoop.output;
-    if (output > CURRENT_RMS * 1.414)
-      output = CURRENT_RMS * 1.414;
-    if (output < -1 * CURRENT_RMS * 1.414)
-      output = -1 * CURRENT_RMS * 1.414;
+    // PID_Calc(&VoltageLoop, V_rms_softstart, V_rms);
+    // output = VoltageLoop.output;
+    // if (output > CURRENT_RMS * 1.414)
+    //   output = CURRENT_RMS * 1.414;
+    // if (output < -1 * CURRENT_RMS * 1.414)
+    //   output = -1 * CURRENT_RMS * 1.414;
 
-    PID_Calc(&CurrentLoop, (output + CURRENT_RMS * 1.414) * fabs(V_mod),
-             fabs(grid_current));
-    curr_loop_out = (CurrentLoop.output + V_rms_softstart) / V_rms_in;
-    compare = (Uint32)(curr_loop_out * MAX_CMPA);
-    if (compare >= 2200)
-      compare = 2200;
-    if (compare <= 50)
-      compare = 50;
-    compare_soft_vol = compare;
+    // actual_curr = nf * grid_inverter_current2 + pf * grid_inverter_current;
+    // PID_Calc(&CurrentLoop, (output + CURRENT_RMS * 1.414) * fabs(V_mod),
+    //          actual_curr);
+    // curr_loop_out = (CurrentLoop.output + V_rms_softstart) / V_rms_in;
+    // compare = (Uint32)(curr_loop_out * MAX_CMPA);
+    // if (compare >= 2200)
+    //   compare = 2200;
+    // if (compare <= 50)
+    //   compare = 50;
+    // compare_soft_vol = compare;
+
+    // Open Loop
+    compare = 500;
+
     if (nf == 1) {
       EPwm5Regs.DBCTL.bit.POLSEL = DB_ACTV_HI;
       // Set actions for rectifier
