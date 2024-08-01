@@ -1,7 +1,7 @@
 ******************************************************************************
              TMS320C2000 Linker Unix v22.6.1                   
 ******************************************************************************
->> Linked Thu Aug  1 05:08:57 2024
+>> Linked Thu Aug  1 09:35:39 2024
 
 OUTPUT FILE NAME:   <Double_AC_Voltage_Controllers.out>
 ENTRY POINT SYMBOL: "_c_int00"  address: 003f572f
@@ -12,16 +12,16 @@ MEMORY CONFIGURATION
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
 PAGE 0:
-  RAML0                 00008000   00000800  000002df  00000521  RWIX
+  RAML0                 00008000   00000800  0000035f  000004a1  RWIX
   RAML1                 00008800   00000400  00000000  00000400  RWIX
   OTP                   003d7800   00000400  00000000  00000400  RWIX
   FLASHH                003d8000   00004000  00000000  00004000  RWIX
   FLASHG                003dc000   00004000  00000000  00004000  RWIX
   FLASHF                003e0000   00004000  00000000  00004000  RWIX
   FLASHE                003e4000   00004000  00000000  00004000  RWIX
-  FLASHD                003e8000   00004000  000002df  00003d21  RWIX
+  FLASHD                003e8000   00004000  0000035f  00003ca1  RWIX
   FLASHC                003ec000   00004000  00000000  00004000  RWIX
-  FLASHA                003f4000   00003f80  00002372  00001c0e  RWIX
+  FLASHA                003f4000   00003f80  0000237a  00001c06  RWIX
   CSM_RSVD              003f7f80   00000076  00000000  00000076  RWIX
   BEGIN                 003f7ff6   00000002  00000002  00000000  RWIX
   CSM_PWL_P0            003f7ff8   00000008  00000000  00000008  RWIX
@@ -106,22 +106,22 @@ SECTION ALLOCATION MAP
  output                                  attributes/
 section   page    origin      length       input sections
 --------  ----  ----------  ----------   ----------------
-.cinit     0    003f62ce    000000a5     
-                  003f62ce    00000069     main.obj (.cinit)
-                  003f6337    00000011     adc.obj (.cinit)
-                  003f6348    0000000e     rts2800_fpu32.lib : exit.c.obj (.cinit)
-                  003f6356    0000000d     epwm.obj (.cinit)
-                  003f6363    00000005     rts2800_fpu32.lib : _lock.c.obj (.cinit:__lock)
-                  003f6368    00000005                       : _lock.c.obj (.cinit:__unlock)
-                  003f636d    00000004                       : errno.c.obj (.cinit)
-                  003f6371    00000002     --HOLE-- [fill = 0]
+.cinit     0    003f62ce    000000ad     
+                  003f62ce    00000071     main.obj (.cinit)
+                  003f633f    00000011     adc.obj (.cinit)
+                  003f6350    0000000e     rts2800_fpu32.lib : exit.c.obj (.cinit)
+                  003f635e    0000000d     epwm.obj (.cinit)
+                  003f636b    00000005     rts2800_fpu32.lib : _lock.c.obj (.cinit:__lock)
+                  003f6370    00000005                       : _lock.c.obj (.cinit:__unlock)
+                  003f6375    00000004                       : errno.c.obj (.cinit)
+                  003f6379    00000002     --HOLE-- [fill = 0]
 
 .pinit     0    003f4000    00000000     UNINITIALIZED
 
-ramfuncs   0    003e8000    000002df     RUN ADDR = 00008000
-                  003e8000    000002c0     main.obj (ramfuncs:retain)
-                  003e82c0    0000001b     F2806x_SysCtrl.obj (ramfuncs)
-                  003e82db    00000004     F2806x_usDelay.obj (ramfuncs)
+ramfuncs   0    003e8000    0000035f     RUN ADDR = 00008000
+                  003e8000    00000340     main.obj (ramfuncs:retain)
+                  003e8340    0000001b     F2806x_SysCtrl.obj (ramfuncs)
+                  003e835b    00000004     F2806x_usDelay.obj (ramfuncs)
 
 .text      0    003f4000    00001975     
                   003f4000    000004be     main.obj (.text)
@@ -464,9 +464,9 @@ MODULE SUMMARY
        Total:                          2438   256                3574              
                                                                                    
     ./user/
-       main.obj                        2622   169                336               
+       main.obj                        2878   177                336               
     +--+-------------------------------+------+------------------+--------------------+
-       Total:                          2622   169                336               
+       Total:                          2878   177                336               
                                                                                    
     /Applications/ti/solar/v1.2/float/lib/Solar_Lib_Float.lib
        SPLL_1ph_SOGI_F.obj             369    0                  0                 
@@ -495,7 +495,7 @@ MODULE SUMMARY
                                                                                    
        Stack:                          0      0                  768               
     +--+-------------------------------+------+------------------+--------------------+
-       Grand Total:                    7989   2555               5759              
+       Grand Total:                    8245   2563               5759              
 
 
 GLOBAL DATA SYMBOLS: SORTED BY DATA PAGE
@@ -610,31 +610,33 @@ address     data page           name
 0000a402     290 (0000a400)     _flag_voltage
 0000a403     290 (0000a400)     _flag_current
 0000a404     290 (0000a400)     _prev_flag_voltage
-0000a406     290 (0000a400)     _Kp_set
-0000a408     290 (0000a400)     _V_rms
-0000a40a     290 (0000a400)     _V_rms_softstart
-0000a40c     290 (0000a400)     _V_rms_ref
-0000a40e     290 (0000a400)     _V_rms_in
-0000a410     290 (0000a400)     _I_rms_total
-0000a412     290 (0000a400)     _filtered_I_rms_total
-0000a414     290 (0000a400)     _output
-0000a416     290 (0000a400)     _lpf_out
-0000a418     290 (0000a400)     _dutycycle
-0000a41a     290 (0000a400)     _normalized_voltage1
-0000a41c     290 (0000a400)     _normalized_voltage2
-0000a41e     290 (0000a400)     _normalized_voltage3
-0000a420     290 (0000a400)     _ref_current
-0000a422     290 (0000a400)     _curr_error
-0000a424     290 (0000a400)     _curr_loop_out
-0000a426     290 (0000a400)     _V_mod
-0000a428     290 (0000a400)     _ratio
-0000a42a     290 (0000a400)     _compare_soft_vol
-0000a42c     290 (0000a400)     _compare_soft_curr
-0000a42e     290 (0000a400)     _curr_soft_start
-0000a430     290 (0000a400)     _vol_soft_shutdown
-0000a432     290 (0000a400)     _compare
-0000a434     290 (0000a400)     _counter
-0000a436     290 (0000a400)     _filter
+0000a405     290 (0000a400)     _pf
+0000a406     290 (0000a400)     _nf
+0000a408     290 (0000a400)     _Kp_set
+0000a40a     290 (0000a400)     _V_rms
+0000a40c     290 (0000a400)     _V_rms_softstart
+0000a40e     290 (0000a400)     _V_rms_ref
+0000a410     290 (0000a400)     _V_rms_in
+0000a412     290 (0000a400)     _I_rms_total
+0000a414     290 (0000a400)     _filtered_I_rms_total
+0000a416     290 (0000a400)     _output
+0000a418     290 (0000a400)     _lpf_out
+0000a41a     290 (0000a400)     _dutycycle
+0000a41c     290 (0000a400)     _normalized_voltage1
+0000a41e     290 (0000a400)     _normalized_voltage2
+0000a420     290 (0000a400)     _normalized_voltage3
+0000a422     290 (0000a400)     _ref_current
+0000a424     290 (0000a400)     _curr_error
+0000a426     290 (0000a400)     _curr_loop_out
+0000a428     290 (0000a400)     _V_mod
+0000a42a     290 (0000a400)     _ratio
+0000a42c     290 (0000a400)     _compare_soft_vol
+0000a42e     290 (0000a400)     _compare_soft_curr
+0000a430     290 (0000a400)     _curr_soft_start
+0000a432     290 (0000a400)     _vol_soft_shutdown
+0000a434     290 (0000a400)     _compare
+0000a436     290 (0000a400)     _counter
+0000a438     290 (0000a400)     _filter
 
 0000a440     291 (0000a440)     _VoltageLoop
 0000a452     291 (0000a440)     _CurrentLoop
@@ -742,7 +744,7 @@ page  address   name
 0     003f4720  _DINTCH4_ISR                    
 0     003f472a  _DINTCH5_ISR                    
 0     003f4734  _DINTCH6_ISR                    
-0     000082db  _DSP28x_usDelay                 
+0     0000835b  _DSP28x_usDelay                 
 1     00000880  _DevEmuRegs                     
 0     003f4f53  _DisableDog                     
 1     00001000  _DmaRegs                        
@@ -822,7 +824,7 @@ page  address   name
 0     003f44fa  _ILLEGAL_ISR                    
 0     003f44be  _INT13_ISR                      
 0     003f44c8  _INT14_ISR                      
-1     0000a410  _I_rms_total                    
+1     0000a412  _I_rms_total                    
 0     003f4ad1  _InitAdc                        
 0     003f4afa  _InitAdcAio                     
 0     003f55f0  _InitCpuTimers                  
@@ -837,7 +839,7 @@ page  address   name
 0     003f53a8  _InitEPwm8Gpio                  
 0     003f5317  _InitEPwmGpio                   
 0     003f53b8  _InitEPwmSyncGpio               
-0     000082c0  _InitFlash                      
+0     00008340  _InitFlash                      
 0     003f4fdd  _InitPeripheralClocks           
 0     003f586c  _InitPieCtrl                    
 0     003f58bb  _InitPieVectTable               
@@ -853,7 +855,7 @@ page  address   name
 0     003f5074  _IntOsc2Sel                     
 0     003f5785  _KEY_Init                       
 0     003f57b5  _KEY_Read                       
-1     0000a406  _Kp_set                         
+1     0000a408  _Kp_set                         
 0     003f41de  _LED_Init                       
 0     003f482e  _LUF_ISR                        
 0     003f4824  _LVF_ISR                        
@@ -883,8 +885,8 @@ page  address   name
 1     00000d00  _PieVectTable                   
 0     003f618e  _PieVectTableInit               
 0     003f44dc  _RTOSINT_ISR                    
-0     003e82df  _RamfuncsLoadEnd                
-abs   000002df  _RamfuncsLoadSize               
+0     003e835f  _RamfuncsLoadEnd                
+abs   0000035f  _RamfuncsLoadSize               
 0     003e8000  _RamfuncsLoadStart              
 0     00008000  _RamfuncsRunStart               
 0     003f4752  _SCIRXINTA_ISR                  
@@ -925,11 +927,11 @@ abs   000002df  _RamfuncsLoadSize
 0     003f454a  _USER8_ISR                      
 0     003f4554  _USER9_ISR                      
 1     00004000  _Usb0Regs                       
-1     0000a426  _V_mod                          
-1     0000a408  _V_rms                          
-1     0000a40e  _V_rms_in                       
-1     0000a40c  _V_rms_ref                      
-1     0000a40a  _V_rms_softstart                
+1     0000a428  _V_mod                          
+1     0000a40a  _V_rms                          
+1     0000a410  _V_rms_in                       
+1     0000a40e  _V_rms_ref                      
+1     0000a40c  _V_rms_softstart                
 1     0000a54c  _Vol1                           
 1     0000a560  _Voltage1                       
 1     0000a56a  _Voltage2                       
@@ -970,25 +972,25 @@ abs   ffffffff  ___pinit__
 0     003f4305  _applyLowPassFilter             
 0     003f5f66  _asc2_0806                      
 0     003f572f  _c_int00                        
-1     0000a432  _compare                        
-1     0000a42c  _compare_soft_curr              
-1     0000a42a  _compare_soft_vol               
+1     0000a434  _compare                        
+1     0000a42e  _compare_soft_curr              
+1     0000a42c  _compare_soft_vol               
 0     003f58e1  _copy_in                        
 0     003f56cc  _cos                            
 0     003f56cc  _cosf                           
-1     0000a434  _counter                        
+1     0000a436  _counter                        
 0     00008000  _cpu_timer1_isr                 
-0     000080dc  _cpu_timer2_isr                 
-1     0000a422  _curr_error                     
+0     000080f0  _cpu_timer2_isr                 
+1     0000a424  _curr_error                     
 1     0000a54b  _curr_index                     
-1     0000a424  _curr_loop_out                  
-1     0000a42e  _curr_soft_start                
+1     0000a426  _curr_loop_out                  
+1     0000a430  _curr_soft_start                
 1     0000a000  _current_graph                  
-1     0000a418  _dutycycle                      
+1     0000a41a  _dutycycle                      
 1     0000a5a0  _errno                          
 0     003f5845  _exit                           
-1     0000a436  _filter                         
-1     0000a412  _filtered_I_rms_total           
+1     0000a438  _filter                         
+1     0000a414  _filtered_I_rms_total           
 1     0000a556  _filtered_current               
 1     0000a558  _filtered_vol3                  
 1     0000a400  _flag                           
@@ -1005,19 +1007,21 @@ abs   ffffffff  ___pinit__
 0     003f4458  _itoa                           
 0     003f5515  _kalmanFilter_Init              
 0     003f552f  _kalman_filter                  
-1     0000a416  _lpf_out                        
+1     0000a418  _lpf_out                        
 0     003f4000  _main                           
 0     003f5927  _memcpy                         
-1     0000a41a  _normalized_voltage1            
-1     0000a41c  _normalized_voltage2            
-1     0000a41e  _normalized_voltage3            
+1     0000a406  _nf                             
+1     0000a41c  _normalized_voltage1            
+1     0000a41e  _normalized_voltage2            
+1     0000a420  _normalized_voltage3            
 0     003f4e2d  _oled_pow                       
-1     0000a414  _output                         
+1     0000a416  _output                         
+1     0000a405  _pf                             
 1     0000a401  _prev_flag                      
 1     0000a404  _prev_flag_voltage              
-1     0000a428  _ratio                          
+1     0000a42a  _ratio                          
 1     0000a59c  _rectifier_dutycycle            
-1     0000a420  _ref_current                    
+1     0000a422  _ref_current                    
 0     003f484f  _rsvd_ISR                       
 0     003f5666  _sin                            
 1     0000a59a  _sineValue1                     
@@ -1030,7 +1034,7 @@ abs   ffffffff  ___pinit__
 0     003f5894  _sqrtf                          
 1     0000a58a  _str                            
 1     0000a54a  _vol_index                      
-1     0000a430  _vol_soft_shutdown              
+1     0000a432  _vol_soft_shutdown              
 abs   ffffffff  binit                           
 0     003f62ce  cinit                           
 0     003f7ff6  code_start                      
@@ -1044,11 +1048,11 @@ page  address   name
 ----  -------   ----                            
 0     00008000  _RamfuncsRunStart               
 0     00008000  _cpu_timer1_isr                 
-0     000080dc  _cpu_timer2_isr                 
-0     000082c0  _InitFlash                      
-0     000082db  _DSP28x_usDelay                 
+0     000080f0  _cpu_timer2_isr                 
+0     00008340  _InitFlash                      
+0     0000835b  _DSP28x_usDelay                 
 0     003e8000  _RamfuncsLoadStart              
-0     003e82df  _RamfuncsLoadEnd                
+0     003e835f  _RamfuncsLoadEnd                
 0     003f4000  .text                           
 0     003f4000  ___text__                       
 0     003f4000  _main                           
@@ -1320,31 +1324,33 @@ page  address   name
 1     0000a402  _flag_voltage                   
 1     0000a403  _flag_current                   
 1     0000a404  _prev_flag_voltage              
-1     0000a406  _Kp_set                         
-1     0000a408  _V_rms                          
-1     0000a40a  _V_rms_softstart                
-1     0000a40c  _V_rms_ref                      
-1     0000a40e  _V_rms_in                       
-1     0000a410  _I_rms_total                    
-1     0000a412  _filtered_I_rms_total           
-1     0000a414  _output                         
-1     0000a416  _lpf_out                        
-1     0000a418  _dutycycle                      
-1     0000a41a  _normalized_voltage1            
-1     0000a41c  _normalized_voltage2            
-1     0000a41e  _normalized_voltage3            
-1     0000a420  _ref_current                    
-1     0000a422  _curr_error                     
-1     0000a424  _curr_loop_out                  
-1     0000a426  _V_mod                          
-1     0000a428  _ratio                          
-1     0000a42a  _compare_soft_vol               
-1     0000a42c  _compare_soft_curr              
-1     0000a42e  _curr_soft_start                
-1     0000a430  _vol_soft_shutdown              
-1     0000a432  _compare                        
-1     0000a434  _counter                        
-1     0000a436  _filter                         
+1     0000a405  _pf                             
+1     0000a406  _nf                             
+1     0000a408  _Kp_set                         
+1     0000a40a  _V_rms                          
+1     0000a40c  _V_rms_softstart                
+1     0000a40e  _V_rms_ref                      
+1     0000a410  _V_rms_in                       
+1     0000a412  _I_rms_total                    
+1     0000a414  _filtered_I_rms_total           
+1     0000a416  _output                         
+1     0000a418  _lpf_out                        
+1     0000a41a  _dutycycle                      
+1     0000a41c  _normalized_voltage1            
+1     0000a41e  _normalized_voltage2            
+1     0000a420  _normalized_voltage3            
+1     0000a422  _ref_current                    
+1     0000a424  _curr_error                     
+1     0000a426  _curr_loop_out                  
+1     0000a428  _V_mod                          
+1     0000a42a  _ratio                          
+1     0000a42c  _compare_soft_vol               
+1     0000a42e  _compare_soft_curr              
+1     0000a430  _curr_soft_start                
+1     0000a432  _vol_soft_shutdown              
+1     0000a434  _compare                        
+1     0000a436  _counter                        
+1     0000a438  _filter                         
 1     0000a440  _VoltageLoop                    
 1     0000a452  _CurrentLoop                    
 1     0000a480  _sineanalyzer_diff1             
@@ -1379,8 +1385,8 @@ page  address   name
 1     0000a5a0  _errno                          
 1     003d7e80  _PartIdRegs                     
 1     003f7ff8  _CsmPwl                         
-abs   000002df  _RamfuncsLoadSize               
 abs   00000300  __STACK_SIZE                    
+abs   0000035f  _RamfuncsLoadSize               
 abs   ffffffff  ___TI_pprof_out_hndl            
 abs   ffffffff  ___TI_prof_data_size            
 abs   ffffffff  ___TI_prof_data_start           
@@ -1390,4 +1396,4 @@ abs   ffffffff  ___pinit__
 abs   ffffffff  binit                           
 abs   ffffffff  pinit                           
 
-[347 symbols]
+[349 symbols]

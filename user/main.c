@@ -37,8 +37,10 @@ _Bool prev_flag = 0;
 _Bool flag_voltage = 0;
 _Bool flag_current = 0;
 _Bool prev_flag_voltage = 0;
-float Kp_set = 1;
+_Bool pf = 0;
+_Bool nf = 0;
 
+float Kp_set = 1;
 extern float grid_voltage;
 extern float grid_inverter_current;
 extern float grid_inverter_voltage;
@@ -234,13 +236,13 @@ int main() {
         EPwm5Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
         EPwm5Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
         EPwm5Regs.DBCTL.bit.IN_MODE = DBA_ALL;
-        EPwm5Regs.DBRED = 1;
-        EPwm5Regs.DBFED = 1;
+        EPwm5Regs.DBRED = 10;
+        EPwm5Regs.DBFED = 10;
         EPwm6Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
         EPwm6Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
         EPwm6Regs.DBCTL.bit.IN_MODE = DBA_ALL;
-        EPwm6Regs.DBRED = 1;
-        EPwm6Regs.DBFED = 1;
+        EPwm6Regs.DBRED = 10;
+        EPwm6Regs.DBFED = 10;
         // Set actions for inverter
         EPwm5Regs.AQCTLA.bit.ZRO = AQ_NO_ACTION;
         EPwm5Regs.AQCTLA.bit.CAU = AQ_CLEAR;
@@ -291,7 +293,16 @@ __interrupt void cpu_timer1_isr(void) {
     I_rms_total = sineanalyzer_diff2.Vrms * 4;
   filtered_I_rms_total = applyLowPassFilter(&filter, I_rms_total);
 
-  V_mod = sin(spll1.theta[0]);
+  // V_mod = sin(spll1.theta[0]);
+  if (V_mod > 0.1)
+    pf = 1;
+  else
+    pf = 0;
+  if (V_mod < -0.1)
+    nf = 1;
+  else
+    nf = 0;
+
   EPwm2Regs.CMPA.half.CMPA = (Uint16)(fabs(V_mod) * MAX_CMPA);
 }
 
@@ -339,6 +350,50 @@ __interrupt void cpu_timer2_isr(void) {
     if (compare <= 50)
       compare = 50;
     compare_soft_vol = compare;
+    if (nf == 1) {
+      EPwm5Regs.DBCTL.bit.POLSEL = DB_ACTV_HI;
+      // Set actions for rectifier
+      EPwm5Regs.AQCTLA.bit.ZRO = AQ_SET;
+      EPwm5Regs.AQCTLA.bit.CAU = AQ_NO_ACTION;
+      EPwm5Regs.AQCTLA.bit.CAD = AQ_NO_ACTION;
+    } else if (nf == 0) {
+      // Active Low PWMs - Setup Deadband
+      EPwm5Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
+      EPwm5Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
+      EPwm5Regs.DBCTL.bit.IN_MODE = DBA_ALL;
+      EPwm5Regs.DBRED = 10;
+      EPwm5Regs.DBFED = 10;
+      // Set actions for inverter
+      EPwm5Regs.AQCTLA.bit.ZRO = AQ_NO_ACTION;
+      EPwm5Regs.AQCTLA.bit.CAU = AQ_CLEAR;
+      EPwm5Regs.AQCTLA.bit.CAD = AQ_SET;
+      // Set actions for inverter
+      EPwm5Regs.AQCTLA.bit.ZRO = AQ_NO_ACTION;
+      EPwm5Regs.AQCTLA.bit.CAU = AQ_CLEAR;
+      EPwm5Regs.AQCTLA.bit.CAD = AQ_SET;
+    }
+    if (pf == 1) {
+      EPwm6Regs.DBCTL.bit.POLSEL = DB_ACTV_HI;
+      // Set actions for rectifier
+      EPwm6Regs.AQCTLA.bit.ZRO = AQ_SET;
+      EPwm6Regs.AQCTLA.bit.CAU = AQ_NO_ACTION;
+      EPwm6Regs.AQCTLA.bit.CAD = AQ_NO_ACTION;
+    } else if (pf == 0) {
+      // Active Low PWMs - Setup Deadband
+      EPwm6Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
+      EPwm6Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
+      EPwm6Regs.DBCTL.bit.IN_MODE = DBA_ALL;
+      EPwm6Regs.DBRED = 10;
+      EPwm6Regs.DBFED = 10;
+      // Set actions for inverter
+      EPwm6Regs.AQCTLA.bit.ZRO = AQ_NO_ACTION;
+      EPwm6Regs.AQCTLA.bit.CAU = AQ_CLEAR;
+      EPwm6Regs.AQCTLA.bit.CAD = AQ_SET;
+      // Set actions for inverter
+      EPwm6Regs.AQCTLA.bit.ZRO = AQ_NO_ACTION;
+      EPwm6Regs.AQCTLA.bit.CAU = AQ_CLEAR;
+      EPwm6Regs.AQCTLA.bit.CAD = AQ_SET;
+    }
     EPwm5Regs.CMPA.half.CMPA = compare;
     EPwm6Regs.CMPA.half.CMPA = compare;
     prev_flag_voltage = flag_voltage;
@@ -351,8 +406,7 @@ __interrupt void cpu_timer2_isr(void) {
     if (vol_soft_shutdown <= 0)
       vol_soft_shutdown = 0;
 
-    lpf_out =
-        filtered_I_rms_total * 1.414 * ratio * curr_soft_start;
+    lpf_out = filtered_I_rms_total * 1.414 * ratio * curr_soft_start;
 
     PID_Calc(&VoltageLoop, V_rms_ref, V_rms);
     output = VoltageLoop.output;
