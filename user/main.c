@@ -68,6 +68,7 @@ float compare_soft_vol = 0;  // For soft shutdown
 float compare_soft_curr = 0; // For soft shutdown
 float curr_soft_start = 0;   // Current Loop soft start
 float vol_soft_shutdown = 1; // Voltage Loop soft shutdown
+float offset = 0.2;
 
 Uint32 compare = 0;
 Uint32 counter = 0;
@@ -143,9 +144,9 @@ int main() {
                                (float)(2 * PI * GRID_FREQ), &spll1);
   spll1.lpf_coeff.B0_lf = (float32)((2 * Kp + Ki / ISR_FREQUENCY) / 2);
   spll1.lpf_coeff.B1_lf = (float32)(-(2 * Kp - Ki / ISR_FREQUENCY) / 2);
-  PID_Init(&VoltageLoop, 0.04, 0.02, 0, 50, 50);
+  PID_Init(&VoltageLoop, 0.01, 0.02, 0, 5, 5);
   // PID_Init(&CurrentLoop, 1, 0.001, 0, 50, 50);
-  PID_Init(&CurrentLoop, 3.5, 0.000, 0, 50, 50);
+  PID_Init(&CurrentLoop, 2, 0.000, 0, 50, 50);
   initLowPassFilter(&filter, CUTOFF_FREQ, ISR_FREQUENCY);
 
   LED_Init();
@@ -238,13 +239,13 @@ int main() {
         EPwm5Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
         EPwm5Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
         EPwm5Regs.DBCTL.bit.IN_MODE = DBA_ALL;
-        EPwm5Regs.DBRED = 10;
-        EPwm5Regs.DBFED = 10;
+        EPwm5Regs.DBRED = 1;
+        EPwm5Regs.DBFED = 1;
         EPwm6Regs.DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
         EPwm6Regs.DBCTL.bit.POLSEL = DB_ACTV_HIC;
         EPwm6Regs.DBCTL.bit.IN_MODE = DBA_ALL;
-        EPwm6Regs.DBRED = 10;
-        EPwm6Regs.DBFED = 10;
+        EPwm6Regs.DBRED = 1;
+        EPwm6Regs.DBFED = 1;
         // Set actions for inverter
         EPwm5Regs.AQCTLA.bit.ZRO = AQ_NO_ACTION;
         EPwm5Regs.AQCTLA.bit.CAU = AQ_CLEAR;
@@ -296,11 +297,11 @@ __interrupt void cpu_timer1_isr(void) {
   filtered_I_rms_total = applyLowPassFilter(&filter, I_rms_total);
 
   V_mod = sin(spll1.theta[0]);
-  if (V_mod > 0.1)
+  if (V_mod > offset)
     pf = 1;
   else
     pf = 0;
-  if (V_mod < -0.1)
+  if (V_mod < -1 * offset)
     nf = 1;
   else
     nf = 0;
@@ -336,26 +337,26 @@ __interrupt void cpu_timer2_isr(void) {
       V_rms_softstart = V_rms_ref;
 
     /********************* Voltage Loop ************************/
-    // PID_Calc(&VoltageLoop, V_rms_softstart, V_rms);
-    // output = VoltageLoop.output;
-    // if (output > CURRENT_RMS * 1.414)
-    //   output = CURRENT_RMS * 1.414;
-    // if (output < -1 * CURRENT_RMS * 1.414)
-    //   output = -1 * CURRENT_RMS * 1.414;
+    PID_Calc(&VoltageLoop, V_rms_softstart, V_rms);
+    output = VoltageLoop.output;
+    if (output > CURRENT_RMS * 1.414)
+      output = CURRENT_RMS * 1.414;
+    if (output < -1 * CURRENT_RMS * 1.414)
+      output = -1 * CURRENT_RMS * 1.414;
 
-    // actual_curr = nf * grid_inverter_current2 + pf * grid_inverter_current;
-    // PID_Calc(&CurrentLoop, (output + CURRENT_RMS * 1.414) * fabs(V_mod),
-    //          actual_curr);
-    // curr_loop_out = (CurrentLoop.output + V_rms_softstart) / V_rms_in;
-    // compare = (Uint32)(curr_loop_out * MAX_CMPA);
-    // if (compare >= 2200)
-    //   compare = 2200;
-    // if (compare <= 50)
-    //   compare = 50;
-    // compare_soft_vol = compare;
+    actual_curr = nf * grid_inverter_current + pf * grid_inverter_current2;
+    PID_Calc(&CurrentLoop, (output + CURRENT_RMS * 1.414) * fabs(V_mod),
+             actual_curr);
+    curr_loop_out = (CurrentLoop.output + V_rms_softstart) / V_rms_in;
+    compare = (Uint32)(curr_loop_out * MAX_CMPA);
+    if (compare >= 2200)
+      compare = 2200;
+    if (compare <= 50)
+      compare = 50;
+    compare_soft_vol = compare;
 
     // Open Loop
-    compare = 500;
+    // compare = 1000;
 
     if (nf == 1) {
       EPwm5Regs.DBCTL.bit.POLSEL = DB_ACTV_HI;

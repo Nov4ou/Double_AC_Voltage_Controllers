@@ -1,7 +1,7 @@
 ******************************************************************************
              TMS320C2000 Linker Unix v22.6.1                   
 ******************************************************************************
->> Linked Thu Aug  1 10:57:35 2024
+>> Linked Thu Aug  1 12:50:47 2024
 
 OUTPUT FILE NAME:   <Double_AC_Voltage_Controllers.out>
 ENTRY POINT SYMBOL: "_c_int00"  address: 003f5755
@@ -12,16 +12,16 @@ MEMORY CONFIGURATION
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
 PAGE 0:
-  RAML0                 00008000   00000800  000002fc  00000504  RWIX
+  RAML0                 00008000   00000800  00000378  00000488  RWIX
   RAML1                 00008800   00000400  00000000  00000400  RWIX
   OTP                   003d7800   00000400  00000000  00000400  RWIX
   FLASHH                003d8000   00004000  00000000  00004000  RWIX
   FLASHG                003dc000   00004000  00000000  00004000  RWIX
   FLASHF                003e0000   00004000  00000000  00004000  RWIX
   FLASHE                003e4000   00004000  00000000  00004000  RWIX
-  FLASHD                003e8000   00004000  000002fc  00003d04  RWIX
+  FLASHD                003e8000   00004000  00000378  00003c88  RWIX
   FLASHC                003ec000   00004000  00000000  00004000  RWIX
-  FLASHA                003f4000   00003f80  000023a5  00001bdb  RWIX
+  FLASHA                003f4000   00003f80  000023aa  00001bd6  RWIX
   CSM_RSVD              003f7f80   00000076  00000000  00000076  RWIX
   BEGIN                 003f7ff6   00000002  00000002  00000000  RWIX
   CSM_PWL_P0            003f7ff8   00000008  00000000  00000008  RWIX
@@ -106,22 +106,22 @@ SECTION ALLOCATION MAP
  output                                  attributes/
 section   page    origin      length       input sections
 --------  ----  ----------  ----------   ----------------
-.cinit     0    003f62f4    000000b2     
-                  003f62f4    00000076     main.obj (.cinit)
-                  003f636a    00000011     adc.obj (.cinit)
-                  003f637b    0000000e     rts2800_fpu32.lib : exit.c.obj (.cinit)
-                  003f6389    0000000d     epwm.obj (.cinit)
-                  003f6396    00000005     rts2800_fpu32.lib : _lock.c.obj (.cinit:__lock)
-                  003f639b    00000005                       : _lock.c.obj (.cinit:__unlock)
-                  003f63a0    00000004                       : errno.c.obj (.cinit)
-                  003f63a4    00000002     --HOLE-- [fill = 0]
+.cinit     0    003f62f4    000000b7     
+                  003f62f4    0000007b     main.obj (.cinit)
+                  003f636f    00000011     adc.obj (.cinit)
+                  003f6380    0000000e     rts2800_fpu32.lib : exit.c.obj (.cinit)
+                  003f638e    0000000d     epwm.obj (.cinit)
+                  003f639b    00000005     rts2800_fpu32.lib : _lock.c.obj (.cinit:__lock)
+                  003f63a0    00000005                       : _lock.c.obj (.cinit:__unlock)
+                  003f63a5    00000004                       : errno.c.obj (.cinit)
+                  003f63a9    00000002     --HOLE-- [fill = 0]
 
 .pinit     0    003f4000    00000000     UNINITIALIZED
 
-ramfuncs   0    003e8000    000002fc     RUN ADDR = 00008000
-                  003e8000    000002dd     main.obj (ramfuncs:retain)
-                  003e82dd    0000001b     F2806x_SysCtrl.obj (ramfuncs)
-                  003e82f8    00000004     F2806x_usDelay.obj (ramfuncs)
+ramfuncs   0    003e8000    00000378     RUN ADDR = 00008000
+                  003e8000    00000359     main.obj (ramfuncs:retain)
+                  003e8359    0000001b     F2806x_SysCtrl.obj (ramfuncs)
+                  003e8374    00000004     F2806x_usDelay.obj (ramfuncs)
 
 .text      0    003f4000    0000199b     
                   003f4000    000004be     main.obj (.text)
@@ -465,9 +465,9 @@ MODULE SUMMARY
        Total:                          2438   256                3574              
                                                                                    
     ./user/
-       main.obj                        2680   182                336               
+       main.obj                        2928   187                336               
     +--+-------------------------------+------+------------------+--------------------+
-       Total:                          2680   182                336               
+       Total:                          2928   187                336               
                                                                                    
     /Applications/ti/solar/v1.2/float/lib/Solar_Lib_Float.lib
        SPLL_1ph_SOGI_F.obj             369    0                  0                 
@@ -496,7 +496,7 @@ MODULE SUMMARY
                                                                                    
        Stack:                          0      0                  768               
     +--+-------------------------------+------+------------------+--------------------+
-       Grand Total:                    8085   2568               5771              
+       Grand Total:                    8333   2573               5771              
 
 
 GLOBAL DATA SYMBOLS: SORTED BY DATA PAGE
@@ -636,9 +636,10 @@ address     data page           name
 0000a430     290 (0000a400)     _compare_soft_curr
 0000a432     290 (0000a400)     _curr_soft_start
 0000a434     290 (0000a400)     _vol_soft_shutdown
-0000a436     290 (0000a400)     _compare
-0000a438     290 (0000a400)     _counter
-0000a43a     290 (0000a400)     _filter
+0000a436     290 (0000a400)     _offset
+0000a438     290 (0000a400)     _compare
+0000a43a     290 (0000a400)     _counter
+0000a43c     290 (0000a400)     _filter
 
 0000a440     291 (0000a440)     _VoltageLoop
 0000a452     291 (0000a440)     _CurrentLoop
@@ -748,7 +749,7 @@ page  address   name
 0     003f4720  _DINTCH4_ISR                    
 0     003f472a  _DINTCH5_ISR                    
 0     003f4734  _DINTCH6_ISR                    
-0     000082f8  _DSP28x_usDelay                 
+0     00008374  _DSP28x_usDelay                 
 1     00000880  _DevEmuRegs                     
 0     003f4f53  _DisableDog                     
 1     00001000  _DmaRegs                        
@@ -843,7 +844,7 @@ page  address   name
 0     003f548e  _InitEPwm8Gpio                  
 0     003f53fd  _InitEPwmGpio                   
 0     003f549e  _InitEPwmSyncGpio               
-0     000082dd  _InitFlash                      
+0     00008359  _InitFlash                      
 0     003f4fdd  _InitPeripheralClocks           
 0     003f5892  _InitPieCtrl                    
 0     003f58e1  _InitPieVectTable               
@@ -889,8 +890,8 @@ page  address   name
 1     00000d00  _PieVectTable                   
 0     003f61b4  _PieVectTableInit               
 0     003f44dc  _RTOSINT_ISR                    
-0     003e82fc  _RamfuncsLoadEnd                
-abs   000002fc  _RamfuncsLoadSize               
+0     003e8378  _RamfuncsLoadEnd                
+abs   00000378  _RamfuncsLoadSize               
 0     003e8000  _RamfuncsLoadStart              
 0     00008000  _RamfuncsRunStart               
 0     003f4752  _SCIRXINTA_ISR                  
@@ -978,15 +979,15 @@ abs   ffffffff  ___pinit__
 0     003f4305  _applyLowPassFilter             
 0     003f5f8c  _asc2_0806                      
 0     003f5755  _c_int00                        
-1     0000a436  _compare                        
+1     0000a438  _compare                        
 1     0000a430  _compare_soft_curr              
 1     0000a42e  _compare_soft_vol               
 0     003f5907  _copy_in                        
 0     003f56f2  _cos                            
 0     003f56f2  _cosf                           
-1     0000a438  _counter                        
+1     0000a43a  _counter                        
 0     00008000  _cpu_timer1_isr                 
-0     000080fb  _cpu_timer2_isr                 
+0     000080f8  _cpu_timer2_isr                 
 1     0000a424  _curr_error                     
 1     0000a54b  _curr_index                     
 1     0000a426  _curr_loop_out                  
@@ -995,7 +996,7 @@ abs   ffffffff  ___pinit__
 1     0000a41a  _dutycycle                      
 1     0000a5ac  _errno                          
 0     003f586b  _exit                           
-1     0000a43a  _filter                         
+1     0000a43c  _filter                         
 1     0000a414  _filtered_I_rms_total           
 1     0000a558  _filtered_current               
 1     0000a55a  _filtered_vol3                  
@@ -1021,6 +1022,7 @@ abs   ffffffff  ___pinit__
 1     0000a41c  _normalized_voltage1            
 1     0000a41e  _normalized_voltage2            
 1     0000a420  _normalized_voltage3            
+1     0000a436  _offset                         
 0     003f4e2d  _oled_pow                       
 1     0000a416  _output                         
 1     0000a405  _pf                             
@@ -1055,11 +1057,11 @@ page  address   name
 ----  -------   ----                            
 0     00008000  _RamfuncsRunStart               
 0     00008000  _cpu_timer1_isr                 
-0     000080fb  _cpu_timer2_isr                 
-0     000082dd  _InitFlash                      
-0     000082f8  _DSP28x_usDelay                 
+0     000080f8  _cpu_timer2_isr                 
+0     00008359  _InitFlash                      
+0     00008374  _DSP28x_usDelay                 
 0     003e8000  _RamfuncsLoadStart              
-0     003e82fc  _RamfuncsLoadEnd                
+0     003e8378  _RamfuncsLoadEnd                
 0     003f4000  .text                           
 0     003f4000  ___text__                       
 0     003f4000  _main                           
@@ -1356,9 +1358,10 @@ page  address   name
 1     0000a430  _compare_soft_curr              
 1     0000a432  _curr_soft_start                
 1     0000a434  _vol_soft_shutdown              
-1     0000a436  _compare                        
-1     0000a438  _counter                        
-1     0000a43a  _filter                         
+1     0000a436  _offset                         
+1     0000a438  _compare                        
+1     0000a43a  _counter                        
+1     0000a43c  _filter                         
 1     0000a440  _VoltageLoop                    
 1     0000a452  _CurrentLoop                    
 1     0000a480  _sineanalyzer_diff1             
@@ -1395,8 +1398,8 @@ page  address   name
 1     0000a5ac  _errno                          
 1     003d7e80  _PartIdRegs                     
 1     003f7ff8  _CsmPwl                         
-abs   000002fc  _RamfuncsLoadSize               
 abs   00000300  __STACK_SIZE                    
+abs   00000378  _RamfuncsLoadSize               
 abs   ffffffff  ___TI_pprof_out_hndl            
 abs   ffffffff  ___TI_prof_data_size            
 abs   ffffffff  ___TI_prof_data_start           
@@ -1406,4 +1409,4 @@ abs   ffffffff  ___pinit__
 abs   ffffffff  binit                           
 abs   ffffffff  pinit                           
 
-[352 symbols]
+[353 symbols]
